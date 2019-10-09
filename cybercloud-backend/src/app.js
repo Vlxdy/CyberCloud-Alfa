@@ -14,5 +14,8 @@ app.use(express.json());
 app.use('/api/terminals',require('./routes/terminals'));
 app.use('/api/test',require('./routes/terminalstest'));
 app.use('/api/rate',require('./routes/rates'));
+app.use('/api/item',require('./routes/items'));
+app.use('/api/itembag',require('./routes/itembag'));
+
 
 module.exports = app;

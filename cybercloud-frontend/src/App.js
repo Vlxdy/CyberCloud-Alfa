@@ -7,12 +7,17 @@ import Navigation from './components/Navigation';
 
 import Terminals from './components/terminals/Terminals'
 
+import Items from './components/items/Items'
+
 
 function App() {
   return (
     <Router>
       <Navigation />
-      <Route path="/" component={Terminals}/>
+      <div className="container p-4">
+        <Route path="/" exact component={Terminals}/>
+        <Route path="/items" component={Items}/>
+      </div>
     </Router>
   );
 }

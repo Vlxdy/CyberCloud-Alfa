@@ -86,9 +86,6 @@ terminalsCtrl.getTerminals = async(req,res)=> {
     //console.log(terminalsAll)
     res.json(terminalsAll)
 }
-function ratefunct () {
-
-};
 
 terminalsCtrl.createTerminal = async (req,res)=> {
     const { number } = req.body;
