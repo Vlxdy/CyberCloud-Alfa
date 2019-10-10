@@ -21,7 +21,6 @@ export default class Items extends Component {
             itembag: res.data.items,
             cost: res.data.cost
         });
-        
     }
     addItembag = async(id, price, description)=>{
         await axios.post('http://localhost:4000/api/itembag', {
@@ -34,6 +33,10 @@ export default class Items extends Component {
     deleteItembag = async(id, price)=>{
         console.log(id)
         await axios.delete('http://localhost:4000/api/itembag/'+id)
+        this.getItembag();
+    }
+    deleteItembags = async()=>{
+        await axios.delete('http://localhost:4000/api/itembag/')
         this.getItembag();
     }
     getItems = async () => {
@@ -60,21 +63,20 @@ export default class Items extends Component {
                 </div>
                     </div>
                 </div>
-                <div className="col-md-8">
+                <div className="col-md-8 bg-dark text-white">
                     <ul className="list-group">
                         {
                             this.state.itembag.map(itemb => (
-                                <li className="list-group-item list-group-item-action" key={itemb._id} onDoubleClick={() => this.deleteItembag(itemb._id, itemb.price)}>
+                                <li className="list-group-item list-group-item-action list-group-item-secondary " key={itemb._id} onDoubleClick={() => this.deleteItembag(itemb._id, itemb.price)}>
                                     {itemb.description} Precio: {itemb.price.toFixed(2)} Bs Cantidad: {itemb.amount} Precio Total: {(itemb.amount*itemb.price).toFixed(2)}
                                 </li>
                             ))
                         }
                     </ul>
-                    <h2>{this.state.cost.toFixed(2)}</h2>
+                    <h2>Precio Total: {this.state.cost.toFixed(2)}</h2>
+                    <button className="btn bg-light" onClick={this.deleteItembags}>Limpiar</button>
                 </div>
             </div>
-                
-
         )
     }
 }

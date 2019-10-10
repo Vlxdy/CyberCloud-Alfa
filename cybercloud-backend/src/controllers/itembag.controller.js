@@ -8,7 +8,6 @@ itembagCtrl.getItems = async (req, res) => {
     for (let index = 0; index < items.length; index++) {
         cost = cost + (items[index].price) * items[index].amount;
     }
-    console.log(cost)
     res.json({ items, cost })
 }
 itembagCtrl.createItem = async (req, res) => {
@@ -21,7 +20,6 @@ itembagCtrl.createItem = async (req, res) => {
             id,
             amount: 1
         });
-        console.log(newItem)
         await newItem.save();
     }
     else {
@@ -41,15 +39,11 @@ itembagCtrl.createItem = async (req, res) => {
 }
 itembagCtrl.deleteItem = async (req, res) => {
     //await Itembag.findByIdAndDelete(req.params.id)
-    const {id} = req.body;
     const item = await Itembag.findById(req.params.id)
-    console.log("entra")
     if (item == null) {
         res.send("Error")
-        console.log("entra3")
     }
     else {
-        console.log("entra2")
         if (item.amount > 1) {
             await Itembag.findByIdAndUpdate(req.params.id,{ "amount": item.amount - 1 });
         }

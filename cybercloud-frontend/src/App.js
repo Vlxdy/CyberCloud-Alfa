@@ -9,6 +9,8 @@ import Terminals from './components/terminals/Terminals'
 
 import Items from './components/items/Items'
 
+import Adminitem from './components/items/Adminitem'
+
 
 function App() {
   return (
@@ -17,6 +19,7 @@ function App() {
       <div className="container p-4">
         <Route path="/" exact component={Terminals}/>
         <Route path="/items" component={Items}/>
+        <Route path="/adminitem" component={Adminitem} />
       </div>
     </Router>
   );
