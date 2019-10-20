@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const router = Router();
-
+const rutasProtegidas = require('../configs/token')
 const {getItems, getItem, createItem, updateItem,deleteItem,deleteItems} = require('../controllers/itembag.controller');
 
 router.route('/')
@@ -9,7 +9,7 @@ router.route('/')
     .delete(deleteItems)
 
 router.route('/:id')
-    .get(getItem)
+    .get(rutasProtegidas, getItem)
     .put(updateItem)
     .delete(deleteItem)
 

@@ -21,7 +21,7 @@ export default class Terminals extends Component {
         this.setState({
             terminals: res.data
         });
-        console.log(res)
+        //console.log(res)
     }
     render() {
         return (
@@ -31,7 +31,7 @@ export default class Terminals extends Component {
                         this.state.terminals.map(terminal => (
                             <div className="card m-2 col-2 p-2  text-cent align-items-center bg-dark text-white" key={terminal.id}>
                                 <h1 className="display-4 font-weight-bold">{terminal.number}</h1>
-                                <Stopwatch id={terminal.id} using={terminal.using} times={terminal.times} rate={terminal.rate} auxitime={terminal.auxitime} index={terminal.index} cost={terminal.cost} />
+                                <Stopwatch id={terminal.id} using={terminal.using} times={terminal.times} rate={terminal.rate} auxitime={terminal.auxitime} index={terminal.index} cost={terminal.cost} user={this.props.user} token={this.props.token}/>
                             </div>)
                         )
                     }

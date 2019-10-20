@@ -38,7 +38,7 @@ terminalsCtrl.getTerminals = async(req,res)=> {
             let auxitime = 0;
             let cost = 0;
             let i = 0;
-            console.log("primer")//----------------------------------
+            
             //console.log(rate.interval[i].time)
             while (time > auxitime) {
                 //console.log(auxitime)
@@ -49,7 +49,7 @@ terminalsCtrl.getTerminals = async(req,res)=> {
                     i=0;
                 }
             }
-            console.log(cost)
+            //console.log(cost)
             const newTerminal = new TerminalOne ({
                 id: terminal._id,
                 number: terminal.number,
@@ -141,7 +141,7 @@ terminalsCtrl.getTerminal = async(req,res)=> {
 terminalsCtrl.updateTerminal = async(req,res)=> {
     const terminal = await Terminal.findById(req.params.id);
     const {using, times} = terminal
-    //console.log(req.params.id)
+    //console.log(req)
     //console.log(terminal)
     if(using){
         
@@ -152,7 +152,7 @@ terminalsCtrl.updateTerminal = async(req,res)=> {
                 times
             }
         )
-        console.log(resulta)
+        //console.log(resulta)
     }
     else{
         const newTimes = new Times({
@@ -166,7 +166,7 @@ terminalsCtrl.updateTerminal = async(req,res)=> {
                 }
             }
         )
-        console.log(resulta)
+        //console.log(resulta)
     }
     const terminal2 = await Terminal.findById(req.params.id);
     res.json(terminal2)

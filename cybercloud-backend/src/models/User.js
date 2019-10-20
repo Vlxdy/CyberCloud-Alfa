@@ -5,12 +5,8 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
-    firstname:{
-        type:String,
-        required:true
-    },
-    celular:{
-        type: Number
+    phone:{
+        type: String
     },
     email:{
         type: String,
@@ -22,12 +18,10 @@ const userSchema = new Schema({
         type:String,
         required:true
     },
-    permissions:[
-        {
-            type:String,
-            default: null
-        }
-    ]
+    permissions:{
+        type: Number,
+        default: 0
+    }
 },{
     timestamps:true
 })

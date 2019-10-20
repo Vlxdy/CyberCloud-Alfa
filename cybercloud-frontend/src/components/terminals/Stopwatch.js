@@ -27,9 +27,10 @@ class Stopwatch extends Component {
     
   }
   componentWillUnmount() {
+    clearInterval(this.timer);
   }
   startTimer = async() => {
-    await Axios.put('http://localhost:4000/api/terminals/' + this.props.id);
+    await Axios.put('http://localhost:4000/api/terminals/' + this.props.id, {token:this.props.token});
     this.setState({
       timerOn: true,
       timerTime: this.state.timerTime,
@@ -42,7 +43,7 @@ class Stopwatch extends Component {
     }, 10);
   };
   stopTimer = async() => {
-    await Axios.put('http://localhost:4000/api/terminals/' + this.props.id);
+    await Axios.put('http://localhost:4000/api/terminals/' + this.props.id, {token:this.props.token});
     this.setState({
       timerOn: false
     });
@@ -50,7 +51,13 @@ class Stopwatch extends Component {
   };
 
   resetTimer = async() => {
-    await Axios.delete('http://localhost:4000/api/terminals/' + this.props.id);
+    await Axios.delete('http://localhost:4000/api/terminals/' + this.props.id,
+        {headers: {
+         
+        },
+        data:{token:this.props.token}}
+      );
+  
     this.setState({
       timerStart: 0,
       timerTime: 0,
@@ -66,13 +73,14 @@ class Stopwatch extends Component {
     let seconds = ("0" + (Math.floor(timerTime / 1000) % 60)).slice(-2);
     let minutes = ("0" + (Math.floor(timerTime / 60000) % 60)).slice(-2);
     let hours = ("0" + Math.floor(timerTime / 3600000)).slice(-2);
-
     return (
       <div className="col align-items-center">
         <div className="col">
           {hours} : {minutes} : {seconds}
         </div>
+        
         <Charge ref={element => {this.charge = element}} cost={this.state.cost} index={this.state.index} rate={this.props.rate} time={this.state.timerTime} auxitime={this.props.auxitime}/>
+        {this.props.user.permissions===1 &&(
         <div className="col">
           {this.state.timerOn === false && this.state.timerTime === 0 && (
             <button className="btn btn-secondary m-1" onClick={this.startTimer}><i className="fas fa-play"></i></button>
@@ -87,6 +95,7 @@ class Stopwatch extends Component {
             <button className="btn btn-secondary m-1" onClick={this.resetTimer}><i className="fas fa-coins"></i></button>
           )}
         </div>
+        )}
       </div>
     );
   }

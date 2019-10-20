@@ -9,6 +9,7 @@ app.set('port', process.env.PORT || 4000);
 app.use(cors());
 app.use(express.json());
 
+
 // routes
 
 app.use('/api/terminals',require('./routes/terminals'));
@@ -17,6 +18,8 @@ app.use('/api/rate',require('./routes/rates'));
 app.use('/api/item',require('./routes/items'));
 app.use('/api/itembag',require('./routes/itembag'));
 app.use('/api/ticket',require('./routes/tickets'));
+app.use('/api/auth',require('./routes/auth'));
+app.use('/api/signin',require('./routes/signIn'));
 
 
 module.exports = app;
