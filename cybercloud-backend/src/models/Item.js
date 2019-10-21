@@ -18,7 +18,8 @@ const itemSchema = new Schema({
         default: 0
     },
     image:{
-        type: String
+        type: String,
+        default: "item.png"
     }
 });
 module.exports = model('Item', itemSchema)

@@ -3,11 +3,15 @@ const authCtrl = {};
 const auth = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const permissions = require('../configs/permissions')
 
 authCtrl.getAuths = async(req,res)=> {
-    const auths = await auth.find();
-    res.json(auths)
+    try {
+        const auths = await auth.find();
+        res.json(auths)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+    
 }
 authCtrl.createAuth = async (req,res)=> {
     console.log("entra")
@@ -38,7 +42,11 @@ authCtrl.signIn = async (req,res)=> {
     //if(error) return res.status(400).send(error.details[0].message);
 
     //checking if the email exists
-    const user = await auth.findOne({email:req.body.email});
+    try {
+        const user = await auth.findOne({email:req.body.email});
+    
+    
+
     if(!user) return res.status(400).send('Email is not found');
 
     //password is correct
@@ -51,7 +59,7 @@ authCtrl.signIn = async (req,res)=> {
     const token = jwt.sign({_id:user._id, permissions: user.permissions}, process.env.TOKEN_SECRET);
     //console.log(user)
     //res.header('access-token', token).send(token);
-    res.json({
+    return res.json({
         token,
         user:{
             name: user.name,
@@ -61,6 +69,9 @@ authCtrl.signIn = async (req,res)=> {
         }
 
     })
+    } catch (error) {
+    return res.status(500).send(error)
+}
 }
 authCtrl.deleteAuth = async (req,res)=> {
 }

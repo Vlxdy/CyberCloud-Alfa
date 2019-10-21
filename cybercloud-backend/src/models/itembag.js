@@ -12,6 +12,10 @@ const itembagSchema = new Schema({
         type: Number,
         required: true
     },
+    image:{
+        type: String,
+        default: "item.png"
+    },
     amount:{
         type: Number,
         default: 0

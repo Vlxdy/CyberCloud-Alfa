@@ -11,13 +11,14 @@ itembagCtrl.getItems = async (req, res) => {
     res.json({ items, cost })
 }
 itembagCtrl.createItem = async (req, res) => {
-    const { id, description, price } = req.body;
+    const { id, description, price, image } = req.body;
     const item = await Itembag.findOne({ "id": id })
     if (item == null) {
         const newItem = new Itembag({
             description,
             price,
             id,
+            image,
             amount: 1
         });
         await newItem.save();

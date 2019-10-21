@@ -9,7 +9,7 @@ mongoose.connect(URI,{
     useCreateIndex: true,
     useUnifiedTopology:true,
     useFindAndModify: false
-});
+}).catch(error => {console.log(error)});
 
 const connection = mongoose.connection;
 

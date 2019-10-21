@@ -8,11 +8,12 @@ itemCtrl.getItems = async(req,res)=> {
     res.json(items)
 }
 itemCtrl.createItem = async (req,res)=> {
-    const { description, price, service} = req.body;
+    const { description, price, service, image} = req.body;
     const newItem = new Item({
         description,
         price,
-        service
+        service,
+        image
     }); 
     await newItem.save();
     res.send("Item saved")

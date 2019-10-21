@@ -16,6 +16,8 @@ import Signup from './components/auth/Signup'
 
 import Signin from './components/auth/Signin'
 
+import Image from './components/items/Image'
+
 class App extends React.Component {
   constructor() {
     super();
@@ -110,6 +112,9 @@ class App extends React.Component {
         </Route>
         <Route path="/adminitem">
           <Adminitem/>
+        </Route>
+        <Route path="/image">
+          <Image/>
         </Route>
         <Route
           exact
