@@ -11,9 +11,15 @@ export default class Adminitem extends Component {
         images: []
     }
 
-    async componentDidMount() {
-        this.getItems();
-        this.getImages();
+    componentDidMount() {
+        if(this.props.user.permissions > 0)
+        {
+            this.getItems();
+            this.getImages();
+        }
+        else{
+            this.props.history.push('/') 
+        }
     }
     getImages = async () => {
         const res = await axios.get('http://localhost:4000/api/image')
@@ -46,27 +52,38 @@ export default class Adminitem extends Component {
         console.log(this.state)
     }
     onSubmit = async (e) => {
-        e.preventDefault();
-        await axios.post('http://localhost:4000/api/item', {
+        try {
+            e.preventDefault();
+        const result = await axios.post('http://localhost:4000/api/item', {
             description: this.state.description,
             price: this.state.price,
             service: false,
             image: this.state.image
         });
+        console.log(result)
         this.setState({
             description: '',
             price: 0,
             image: ''
         });
         this.getItems();
+        } catch (error) {
+            console.log(error)
+        }
+        
     }
 
     deleteItem = async (itemId) => {
         const response = window.confirm('¿Desea eliminar el producto?');
-        if (response) {
-            await axios.delete('http://localhost:4000/api/item/' + itemId);
-            this.getItems();
+        try {
+            if (response) {
+                await axios.delete('http://localhost:4000/api/item/' + itemId);
+                this.getItems();
+            }
+        } catch (error) {
+            console.log(error)
         }
+        
     }
 
     render() {
@@ -85,6 +102,7 @@ export default class Adminitem extends Component {
                                     onChange={this.onChangeDescription}
                                     placeholder="Escribe algo"
                                     maxLength="20"
+                                    required
                                 />
                             </div>
                             <div className="form-group">
@@ -94,6 +112,7 @@ export default class Adminitem extends Component {
                                     value={this.state.price}
                                     type="text"
                                     onChange={this.onChangePrice}
+                                    required
                                 />
                             </div>
                             <div className="form-group">
@@ -115,8 +134,8 @@ export default class Adminitem extends Component {
                             <button type="submit" className="btn btn-secondary">Guardar</button>
                         </form>
                     </div>
-                    
-                </div>
+                
+                 </div>
                 <div className="col-md-8">
                     <ul className="list-group">
                         {
@@ -125,7 +144,7 @@ export default class Adminitem extends Component {
                                 <li className="list-group-item list-group-item-action" key={item._id} onDoubleClick={() => this.deleteItem(item._id)}>
                                     <div className="row">
                                         <div className="col-sm">
-                                            <img src={"http://localhost:4000/images/" + item.image} className="rounded float-left" height="30" width="30" alt="http://localhost:4000/images/item.png" />
+                                            <img src={"http://localhost:4000/images/" + item.image} className="rounded float-left" height="30" width="30" alt="Error" onError={(e)=>{e.target.src="http://localhost:4000/images/item.png"}} />
                                             {item.description.toUpperCase()}
                                         </div>
                                         <div className="col-sm">

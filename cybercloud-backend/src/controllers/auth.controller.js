@@ -62,10 +62,12 @@ authCtrl.signIn = async (req,res)=> {
     return res.json({
         token,
         user:{
+            _id:user._id,
             name: user.name,
             phone: user.phone,
             email: user.email,
-            permissions: user.permissions
+            permissions: user.permissions,
+            money: user.money
         }
 
     })
@@ -81,16 +83,20 @@ authCtrl.updateAuth = async(req,res)=> {
 }
 authCtrl.updatePermissions = async(req, res)=>{
     //const terminal = await Terminal.findById(req.params.id);
-    const user = await auth.findById(req.body.id);
+    try {
+        //const user = await auth.findById(req.body.id);
     //console.log(req.params.id)
     //console.log(terminal)
-
-      const resulta = await auth.updateOne(
+        const resulta = await auth.updateOne(
             {_id:req.body.id},{
                 permissions:1
             })
-    const user1 = await auth.findById(req.body.id);
+        const user1 = await auth.findById(req.body.id);
     res.json(user1)
+    } catch (error) {
+        return res.status(500).send(error)
+    }
+    
 }
 
 module.exports = authCtrl;

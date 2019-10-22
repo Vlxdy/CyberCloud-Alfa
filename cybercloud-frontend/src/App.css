@@ -1,0 +1,18 @@
+body {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none; 
+}
+.icon-white {
+    color: white;
+    width:20;
+    height:20;
+}
+.icon-silver {color: silver}
+
+.fondoimagen{
+    background-image: url("/la/url/de/la/imagen.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}

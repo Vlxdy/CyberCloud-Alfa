@@ -25,6 +25,8 @@ app.use('/api/ticket',require('./routes/tickets'));
 app.use('/api/auth',require('./routes/auth'));
 app.use('/api/signin',require('./routes/signIn'));
 app.use('/api/image',require('./routes/image'));
+app.use('/api/itemuser',require('./routes/itemuser'));
+app.use('/api/petition',require('./routes/petitions'));
 
 
 //image upload

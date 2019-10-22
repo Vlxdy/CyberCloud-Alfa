@@ -3,15 +3,11 @@ const { Schema, model } = require('mongoose');
 const ticketSchema = new Schema({
     id_user:{
         type: String,
-        default: null
+        default: "anonymous"
     },
     id_operator:{
         type:String,
         default:null
-    },
-    date:{
-        type: Date,
-        default: Date.now()
     },
     id_caja:{
         type: String,
@@ -23,6 +19,10 @@ const ticketSchema = new Schema({
             default: null
         },
         inittime:{
+            type: Date,
+            default: null
+        },
+        endtime:{
             type: Date,
             default: null
         }
@@ -47,10 +47,6 @@ const ticketSchema = new Schema({
             },
             price:{
                 type: Number,
-                default: null
-            },
-            service:{
-                type: Boolean,
                 default: null
             },
             amount:{

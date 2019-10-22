@@ -1,28 +1,14 @@
 const { Schema, model } = require('mongoose');
-
-const userSchema = new Schema({
-    name:{
+const petitionsSchema = new Schema({
+    user:{
         type: String,
-        required: true,
+        default: "anonymous"
     },
-    phone:{
-        type: String
-    },
-    email:{
-        type: String,
-        required: true,
-        trim: true,
-        unique: true
-    },
-    password:{
+    username:{
         type:String,
-        required:true
+        default: "anonymous"
     },
-    permissions:{
-        type: Number,
-        default: 0
-    },
-    money:{
+    terminal:{
         type: Number,
         default: 0
     },
@@ -43,9 +29,11 @@ const userSchema = new Schema({
             type: Number,
             default: 0
         }
-    }]
-},{
-    timestamps:true
-})
-
-module.exports = model('User',userSchema)
+    }],
+    cost:{
+        type: Number,
+        default: 0
+    }
+    
+});
+module.exports = model('Petitions', petitionsSchema)

@@ -4,14 +4,17 @@ export default class image extends Component {
     state = {
         detail: '',
         selectedFile: null,
-        images:[]
+        images: []
     }
     getImages = async () => {
-        const res = await axios.get('http://localhost:4000/api/image')
-        this.setState({
+        try {
+            const res = await axios.get('http://localhost:4000/api/image')
+            this.setState({
             images: res.data
-        });
-        console.log(res)
+            });
+        } catch (error) {
+            console.log(error)
+        }
     }
     async componentDidMount() {
         this.getImages();
@@ -26,74 +29,85 @@ export default class image extends Component {
             selectedFile: event.target.files[0]
         })
     }
-    fileUploadHandler = () => {
-        const fd = new FormData();
-        fd.append('image', this.state.selectedFile, this.state.selectedFile.name);
-        axios.post('http://localhost:4000/api/upload', fd, {
-            onUploadProgress: ProgressEvent => {
-                console.log('Upload Progress: ' + (ProgressEvent.loaded / ProgressEvent.total) * 100)
-            }
-        })
-            .then(res => {
-                console.log(res)
-                axios.post('http://localhost:4000/api/image', {
-                    name: this.state.selectedFile.name,
-                    detail: this.state.detail
-                })
-                    .then(res => {
-                        console.log(res);
-                        this.setState({
-                            detail: '',
-                            selectedFile: null
-                        })
-                        this.getImages();
-                    });
-            });
-            
+    handleSubmit = () => {
+        if (this.state.detail==="") {
+            window.alert('Llene los campos necesarios.');
+        }
+        else{
+        try {
+            const fd = new FormData();
+            fd.append('image', this.state.selectedFile, this.state.selectedFile.name);
+            axios.post('http://localhost:4000/api/upload', fd, {
+                onUploadProgress: ProgressEvent => {
+                    console.log('Upload Progress: ' + (ProgressEvent.loaded / ProgressEvent.total) * 100)
+                }
+            })
+                .then(res => {
+                    console.log(res)
+                    axios.post('http://localhost:4000/api/image', {
+                        name: this.state.selectedFile.name,
+                        detail: this.state.detail
+                    })
+                        .then(res => {
+                            console.log(res);
+                            this.setState({
+                                detail: '',
+                                selectedFile: null
+                            })
+                            this.getImages();
+                        });
+                });
+        } catch (error) {
+            console.log(error)
+            window.alert('Llene los campos necesarios.');
+        }
+    }
     }
     render() {
         return (
             <div className="row">
                 <div className="col-md-5">
-                <div className="card card-body">
-                    <form onSubmit={this.fileUploadHandler}>
                     <h1>Subir ícono</h1>
-                    <label>Detalle: </label>
-                    <div className="form-group">
-                        <input
-                        type="text"
-                        className="form-control"
-                        value={this.state.detail}
-                        onChange={this.onChangeDetail}
-                        maxLength="20"
-                        required
-                        />
-                    </div>
-                    <div className="form-group">
-                    <input type="file" className="" onChange={this.fileSelectedHandler} required/>
-                    </div>
+                    <div className="card card-body">
+                        
+                            <div className="form-group">
+                                <label>Detail:</label>
+                                <input
+                                    className="form-control"
+                                    value={this.state.detail}
+                                    type="text"
+                                    onChange={this.onChangeDetail}
+                                    placeholder="Escribe algo"
+                                    maxLength="20"
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                            <input type="file" onChange={this.fileSelectedHandler} required />
+                            </div>
+                            
+                            <div className="form-group">
+                            <input type="submit" value="Guardar" className="btn btn-secondary" onClick={this.handleSubmit} />
+                            </div>
+                        
 
-                    <button type="submit" className="btn btn-secondary">Subir</button>
-                    </form>
-                
-                </div>
+                    </div>
                 </div>
                 <div className="col-md-7">
                     <div className="row">
-                    {
-                        this.state.images.map(image => (
-                            <div className="card m-2 col-2 p-2  text-cent align-items-center bg-dark text-white" key={image._id}>
-                                <img src={"http://localhost:4000/images/" + image.name} className="rounded float-left" height="70" width="70" alt="http://localhost:4000/images/item.png" />
-                                {image.detail}
-
-                            </div>)
-                        )
-                    }
+                        {
+                            this.state.images.map(image => (
+                                <div className="card m-2 col-2 p-2  text-cent align-items-center bg-dark text-white" key={image._id}>
+                                    <img src={"http://localhost:4000/images/" + image.name} className="rounded float-left" height="70" width="70" alt="error" onError={(e)=>{e.target.src="http://localhost:4000/images/item.png"}}/>
+                                    {image.detail}
+                                </div>)
+                            )
+                        }
                     </div>
-                
+
                 </div>
             </div>
-            
+
         )
     }
 }

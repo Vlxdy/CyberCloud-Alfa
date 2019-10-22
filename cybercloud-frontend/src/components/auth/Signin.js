@@ -12,13 +12,16 @@ export default class Signin extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
+  componentDidMount() {
+    this.props.handleLogout();
+  }
   handleChange(event) {
     this.setState({
       [event.target.name]: event.target.value
     });
   }
   handleSubmit (event){
-      console.log("entró")
+      
     const { email, password } = this.state;
     axios.post(
         'http://localhost:4000/api/signin',
@@ -27,7 +30,7 @@ export default class Signin extends Component {
             password: password
         }
       ).then(response => {
-        
+        console.log(response.data)
           this.props.handleLogin(response.data);
           this.props.history.push('/') 
         

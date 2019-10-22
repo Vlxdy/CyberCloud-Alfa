@@ -18,6 +18,10 @@ import Signin from './components/auth/Signin'
 
 import Image from './components/items/Image'
 
+import Buy from './components/items/Buy'
+
+import Petitions from './components/petitions/Petitions'
+
 class App extends React.Component {
   constructor() {
     super();
@@ -85,6 +89,7 @@ class App extends React.Component {
       token: ""
     });
     localStorage.clear()
+    
   }
 
   handleLogin(data) {
@@ -107,15 +112,33 @@ class App extends React.Component {
         <Route path="/" exact>
           <Terminals user={this.state.user} token={this.state.token}/>
         </Route>
-        <Route path="/items">
-          <Items/>
-        </Route>
-        <Route path="/adminitem">
-          <Adminitem/>
-        </Route>
-        <Route path="/image">
-          <Image/>
-        </Route>
+
+        <Route
+          path="/items"
+          render={props => (
+            <Items
+            {...props}
+            logged={this.state.loggedInStatus}
+            user={this.state.user}
+            />
+          )}/>
+          <Route
+          path="/adminitem"
+          render={props => (
+            <Adminitem
+            {...props}
+            logged={this.state.loggedInStatus}
+            user={this.state.user}
+            />
+          )}/>
+          <Route
+          path="/image"
+          render={props => (
+            <Image
+            {...props}
+            logged={this.state.loggedInStatus}
+            />
+          )}/>
         <Route
           exact
           path="/signup"
@@ -132,7 +155,29 @@ class App extends React.Component {
            {...props} 
             handleLogin={this.handleLogin.bind(this)}
             handleLogout={this.handleLogout}
-            loggedInStatus={this.state.loggedInStatus}
+            logged={this.state.loggedInStatus}
+            />
+            )}
+          />
+          <Route
+          exact
+          path={"/buy"}
+          render={props => (
+          <Buy
+           {...props}
+            logged={this.state.loggedInStatus}
+            user={this.state.user}
+            />
+            )}
+          />
+          <Route
+          exact
+          path={"/petitions"}
+          render={props => (
+          <Petitions
+           {...props}
+            logged={this.state.loggedInStatus}
+            user={this.state.user}
             />
             )}
           />

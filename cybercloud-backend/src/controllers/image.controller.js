@@ -14,9 +14,9 @@ imageCtrl.createImage = async (req,res)=> {
     });
     try { 
         await newImage.save();
-        res.send({status:true})
+        return res.send({status:true})
     } catch (err) {
-        res.status(400).send({status:false, error: err});
+        return res.status(400).send({status:false, error: err});
     }
 }
 imageCtrl.deleteImage = async (req,res)=> {
