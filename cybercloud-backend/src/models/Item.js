@@ -11,7 +11,8 @@ const itemSchema = new Schema({
     },
     service:{
         type: Boolean,
-        required: true
+        required: true,
+        default: false
     },
     catidad:{
         type: Number,

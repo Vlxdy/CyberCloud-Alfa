@@ -42,9 +42,7 @@ export default class Charge extends Component {
     }
     render() {
         return (
-            <div>
-                <h1>{this.state.cost.toFixed(2)} Bs.</h1>
-            </div>
+                <h4>{(this.state.cost + this.props.costItem).toFixed(2)} Bs.</h4>
         )
     }
 }

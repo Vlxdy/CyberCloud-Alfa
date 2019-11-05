@@ -22,7 +22,7 @@ class Stopwatch extends Component {
         this.setState({
           timerTime: Date.now() - this.state.timerStart
         });
-      }, 10);
+      }, 1000);
     }
     
   }
@@ -55,7 +55,7 @@ class Stopwatch extends Component {
         {headers: {
          
         },
-        data:{token:this.props.token}}
+        data:{token:this.props.token, operator: this.props.user}}
       );
   
     this.setState({
@@ -64,6 +64,7 @@ class Stopwatch extends Component {
       cost: 0,
       index:0
     });
+    this.props.getTerminals();
     this.charge.reset();
   };
 
@@ -74,28 +75,29 @@ class Stopwatch extends Component {
     let minutes = ("0" + (Math.floor(timerTime / 60000) % 60)).slice(-2);
     let hours = ("0" + Math.floor(timerTime / 3600000)).slice(-2);
     return (
-      <div className="col align-items-center">
-        <div className="col">
+      <div className="">
+        <div className="row justify-content-center">
           {hours} : {minutes} : {seconds}
+        <Charge ref={element => {this.charge = element}} cost={this.state.cost} index={this.state.index} rate={this.props.rate} time={this.state.timerTime} auxitime={this.props.auxitime} costItem={this.props.costItem}/>
         </div>
-        
-        <Charge ref={element => {this.charge = element}} cost={this.state.cost} index={this.state.index} rate={this.props.rate} time={this.state.timerTime} auxitime={this.props.auxitime}/>
+        <div className="row justify-content-center">
         {this.props.user.permissions===1 &&(
-        <div className="col">
+        <div className="">
           {this.state.timerOn === false && this.state.timerTime === 0 && (
-            <button className="btn btn-secondary m-1" onClick={this.startTimer}><i className="fas fa-play"></i></button>
+            <button className="btn btn-dark m-1" onClick={this.startTimer}><i className="fas fa-play"></i></button>
           )}
           {this.state.timerOn === true && (
-            <button className="btn btn-secondary m-1" onClick={this.stopTimer}><i className="fas fa-pause"></i></button>
+            <button className="btn btn-dark m-1" onClick={this.stopTimer}><i className="fas fa-pause"></i></button>
           )}
           {this.state.timerOn === false && this.state.timerTime > 0 && (
-            <button className="btn btn-secondary m-1" onClick={this.startTimer}><i className="fas fa-play"></i></button>
+            <button className="btn btn-dark m-1" onClick={this.startTimer}><i className="fas fa-play"></i></button>
           )}
           {this.state.timerOn === false && this.state.timerTime > 0 && (
-            <button className="btn btn-secondary m-1" onClick={this.resetTimer}><i className="fas fa-coins"></i></button>
+            <button className="btn btn-dark m-1" onClick={this.resetTimer}><i className="fas fa-coins"></i></button>
           )}
         </div>
         )}
+        </div>
       </div>
     );
   }

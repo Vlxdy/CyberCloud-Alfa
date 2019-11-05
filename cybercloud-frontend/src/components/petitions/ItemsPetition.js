@@ -6,8 +6,7 @@ export default class ItemPetition extends Component {
     }
     render() {
         return (
-            <div>
-                <ul className="list-group">
+                <ul className="list-group list-group-flush">
                                 {
                                     this.props.items.map(item => (
                                         <li className="list-group-item list-group-item-action" key={item._id}>
@@ -16,7 +15,7 @@ export default class ItemPetition extends Component {
                                     ))
                                 }
                 </ul>
-            </div>
+
         )
     }
 }

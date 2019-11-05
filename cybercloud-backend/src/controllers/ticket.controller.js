@@ -9,7 +9,6 @@ ticketCtrl.getTickets = async (req, res) => {
     } catch (error) {
         return res.status(400).send({ status: false, error: err });
     }
-
 }
 ticketCtrl.createTicket = async (req, res) => {
     try {
@@ -21,7 +20,7 @@ ticketCtrl.createTicket = async (req, res) => {
             id_rate
         });
         await newTicket.save();
-        return res.send({status: true})
+        return res.send({status: true});
     } catch (error) {
         return res.status(400).send({ status: false, error: err });
     }

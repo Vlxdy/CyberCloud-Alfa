@@ -57,17 +57,22 @@ export default class Buy extends Component {
     buyItems = async () => {
         if (this.state.cost > 0) {
             const response = window.confirm('El pedido tendrá un costó de ' + this.state.cost + ' Bs.');
-            try {
-                if (response) {
-                    await axios.post('http://localhost:4000/api/petition', {
-                        user: this.props.user._id,
-                        items: this.state.itembag
-                    });
-                    this.deleteItembags();
+            console.log(this.props.user.money)
+            if (this.props.user.money >= this.state.cost) {
+                try {
+                    if (response) {
+                        await axios.post('http://localhost:4000/api/petition', {
+                            user: this.props.user._id,
+                            username: this.props.user.name,
+                            items: this.state.itembag
+                        });
+                        this.deleteItembags();
+                    }
+                } catch (error) {
+                    window.alert("Hubo un error. Consulté a un administrativo.")
                 }
-            } catch (error) {
-                window.alert("Hubo un error. Consulté a un administrativo.")
             }
+            else { window.alert("Credito insuficiente.") }
         }
         else {
             window.alert("Seleccione algunos artículos.")
@@ -112,7 +117,7 @@ export default class Buy extends Component {
                     </ul>
                     <strong><h2>Precio Total: {this.state.cost.toFixed(2)}</h2></strong>
                     <div >
-                        <button className="btn bg-light" onClick={this.deleteItembags}>Limpiar</button>
+                        <button className="btn bg-light m-1" onClick={this.deleteItembags}>Limpiar</button>
                         <button className="btn bg-light" onClick={this.buyItems}>Solicitar Petición</button>
                     </div>
                 </div>

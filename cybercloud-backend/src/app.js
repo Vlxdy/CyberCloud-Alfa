@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const path = require("path");
 const fileUpload = require('express-fileupload')
+const { getSettings, setSettings} = require('./settings')
 // settings
 app.set('port', process.env.PORT || 4000);
 
@@ -17,7 +17,7 @@ app.use(fileUpload({
 // routes
 
 app.use('/api/terminals',require('./routes/terminals'));
-app.use('/api/test',require('./routes/terminalstest'));
+app.use('/api/configuration',require('./routes/configuration'));
 app.use('/api/rate',require('./routes/rates'));
 app.use('/api/item',require('./routes/items'));
 app.use('/api/itembag',require('./routes/itembag'));
@@ -27,6 +27,16 @@ app.use('/api/signin',require('./routes/signIn'));
 app.use('/api/image',require('./routes/image'));
 app.use('/api/itemuser',require('./routes/itemuser'));
 app.use('/api/petition',require('./routes/petitions'));
+app.use('/api/itempurchased', require('./routes/itempurchased'));
+app.use('/api/interval', require('./routes/interval'));
+app.use('/api/box', require('./routes/box'));
+app.use('/api/recharge', require('./routes/recharge'));
+app.use('/api/usedterminal', require('./routes/usedterminal'));
+app.use('/api/user', require('./routes/user'));
+app.use('/api/itemterminal', require('./routes/itemterminal'));
+app.use('/api/bagterminal', require('./routes/bagterminal'));
+app.use('/api/primary', require('./routes/primary'));
+app.use('/api/userhistory', require('./routes/userhistory'));
 
 
 //image upload
@@ -38,5 +48,6 @@ app.post('/api/upload',(req,res) => {
     })
     //console.log(req.files.image);
 })
+getSettings();
 
 module.exports = app;

@@ -1,0 +1,6 @@
+body{
+  background:url("../images/image.jpg");
+}
+.opacity{
+  opacity:0.9; /* Opacidad 60% */
+}

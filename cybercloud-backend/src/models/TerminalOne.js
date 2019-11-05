@@ -40,8 +40,17 @@ const terminalOneSchema = new Schema(
         },
         cost:{
             type:Number
+        },
+        user:{
+            id:{
+                type:String,
+                default: "0"
+            },
+            name:{
+                type: String,
+                default: ""
+            }
         }
-
     })
 
 module.exports = model('TerminalOne', terminalOneSchema)

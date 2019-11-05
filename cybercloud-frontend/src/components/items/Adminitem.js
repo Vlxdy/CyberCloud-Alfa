@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 export default class Adminitem extends Component {
-
     state = {
         description: '',
         price: 0,
@@ -10,8 +9,8 @@ export default class Adminitem extends Component {
         items: [],
         images: []
     }
-
     componentDidMount() {
+        console.log(this.props.user)
         if(this.props.user.permissions > 0)
         {
             this.getItems();
@@ -149,9 +148,6 @@ export default class Adminitem extends Component {
                                         </div>
                                         <div className="col-sm">
                                             PRECIO:  {item.price} Bs
-                                    </div>
-                                        <div className="col-sm">
-                                            CANTIDAD:
                                     </div>
                                     </div>
                                 </li>

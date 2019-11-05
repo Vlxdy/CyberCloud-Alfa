@@ -11,7 +11,7 @@ itembagCtrl.getItems = async (req, res) => {
     }
         return res.json({ items, cost })
     } catch (error) {
-        return res.status(400).send({status:false, error: err});
+        return res.status(400).send({status:false, error});
     }
     
 }
@@ -44,7 +44,7 @@ itembagCtrl.createItem = async (req, res) => {
         return res.send({status:true})
         //res.json(item)
     } catch (error) {
-        return res.status(400).send({ status: false, error: err });
+        return res.status(400).send({ status: false, error });
     }
 
 }
@@ -65,7 +65,7 @@ itembagCtrl.deleteItem = async (req, res) => {
             return res.send({status:true})
         }
     } catch (error) {
-        return res.status(400).send({ status: false, error: err });
+        return res.status(400).send({ status: false, error });
     }
 
 
@@ -75,7 +75,7 @@ itembagCtrl.deleteItems = async (req, res) => {
         await Itembag.deleteMany();
         return res.send({status:true})    
     } catch (error) {
-        return res.status(400).send({ status: false, error: err });
+        return res.status(400).send({ status: false, error });
     }
     
 }

@@ -26,7 +26,7 @@ rutasProtegidas.use((req, res, next) => {
       if (err) {
         return res.json({ mensaje: 'Token inválida' });
       } else {
-        console.log("funciono")
+        //console.log("funciono")
         req.decoded = decoded;
         next();
       }
