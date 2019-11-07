@@ -1,6 +1,14 @@
 body{
-  background:url("../images/image.jpg");
+  background-color:rgb(211, 237, 255);
+  color: rgb(9, 57, 117);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; 
 }
 .opacity{
   opacity:0.9; /* Opacidad 60% */
+}
+#barras{
+  background-color: #BEDDFF;
 }

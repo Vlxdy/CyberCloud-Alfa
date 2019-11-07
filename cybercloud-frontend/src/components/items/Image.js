@@ -8,7 +8,7 @@ export default class image extends Component {
     }
     getImages = async () => {
         try {
-            const res = await axios.get('http://localhost:4000/api/image')
+            const res = await axios.get('http://'+global.ip+':4000/api/image')
             this.setState({
             images: res.data
             });
@@ -37,14 +37,14 @@ export default class image extends Component {
         try {
             const fd = new FormData();
             fd.append('image', this.state.selectedFile, this.state.selectedFile.name);
-            axios.post('http://localhost:4000/api/upload', fd, {
+            axios.post('http://'+global.ip+':4000/api/upload', fd, {
                 onUploadProgress: ProgressEvent => {
                     console.log('Upload Progress: ' + (ProgressEvent.loaded / ProgressEvent.total) * 100)
                 }
             })
                 .then(res => {
                     console.log(res)
-                    axios.post('http://localhost:4000/api/image', {
+                    axios.post('http://'+global.ip+':4000/api/image', {
                         name: this.state.selectedFile.name,
                         detail: this.state.detail
                     })
@@ -87,7 +87,7 @@ export default class image extends Component {
                             </div>
                             
                             <div className="form-group">
-                            <input type="submit" value="Guardar" className="btn btn-secondary" onClick={this.handleSubmit} />
+                            <input type="submit" value="Guardar" className="btn btn-info" onClick={this.handleSubmit} />
                             </div>
                         
 
@@ -97,8 +97,8 @@ export default class image extends Component {
                     <div className="row">
                         {
                             this.state.images.map(image => (
-                                <div className="card m-2 col-2 p-2  text-cent align-items-center bg-dark text-white" key={image._id}>
-                                    <img src={"http://localhost:4000/images/" + image.name} className="rounded float-left" height="70" width="70" alt="error" onError={(e)=>{e.target.src="http://localhost:4000/images/item.png"}}/>
+                                <div className="card m-2 col-2 p-2  text-cent align-items-center bg-light" key={image._id}>
+                                    <img src={"http://"+global.ip+":4000/images/" + image.name} className="rounded float-left" height="70" width="70" alt="error" onError={(e)=>{e.target.src="http://"+global.ip+":4000/images/item.png"}}/>
                                     {image.detail}
                                 </div>)
                             )

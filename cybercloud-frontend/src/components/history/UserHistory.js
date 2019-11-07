@@ -14,7 +14,7 @@ export default class userhistory extends Component {
     getHistory = async () => {
         const tempo = JSON.parse(localStorage.getItem('datos'));
         //console.log(tempo.user)
-        const res = await axios.get('http://localhost:4000/api/userhistory/' + tempo.user._id);
+        const res = await axios.get('http://'+global.ip+':4000/api/userhistory/' + tempo.user._id);
         this.setState({
             itempurchased: res.data.itempurchased,
             usedterminals: res.data.TerminalsUsed
@@ -27,7 +27,7 @@ export default class userhistory extends Component {
                 <div className="col-md-6">
                     <ul className="list-group">
                         {this.state.itempurchased.map(item => (
-                            <li key={item._id} type="button" className="list-group-item list-group-item-action">
+                            <li key={item._id} type="button" className="list-group-item list-group-item-info list-group-item-action">
                                 <div className="row">
                                     <div className="col-5">
                                         {item.description}
@@ -52,7 +52,7 @@ export default class userhistory extends Component {
                 <div className="col-md-6">
                 <ul className="list-group">
                         {this.state.usedterminals.map(terminal => (
-                            <li key={terminal._id} type="button" className="list-group-item list-group-item-action">
+                            <li key={terminal._id} type="button" className="list-group-item list-group-item-secondary list-group-item-action">
                                 <div className="row">
                                     <div className="col-3">
                                         {getTime(terminal.time)}

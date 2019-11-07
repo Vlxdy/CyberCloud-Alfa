@@ -21,14 +21,14 @@ export default class Adminitem extends Component {
         }
     }
     getImages = async () => {
-        const res = await axios.get('http://localhost:4000/api/image')
+        const res = await axios.get('http://'+global.ip+':4000/api/image')
         this.setState({
             images: res.data
         });
         console.log(res)
     }
     getItems = async () => {
-        const res = await axios.get('http://localhost:4000/api/item')
+        const res = await axios.get('http://'+global.ip+':4000/api/item')
         this.setState({
             items: res.data
         });
@@ -53,7 +53,7 @@ export default class Adminitem extends Component {
     onSubmit = async (e) => {
         try {
             e.preventDefault();
-        const result = await axios.post('http://localhost:4000/api/item', {
+        const result = await axios.post('http://'+global.ip+':4000/api/item', {
             description: this.state.description,
             price: this.state.price,
             service: false,
@@ -76,7 +76,7 @@ export default class Adminitem extends Component {
         const response = window.confirm('¿Desea eliminar el producto?');
         try {
             if (response) {
-                await axios.delete('http://localhost:4000/api/item/' + itemId);
+                await axios.delete('http://'+global.ip+':4000/api/item/' + itemId);
                 this.getItems();
             }
         } catch (error) {
@@ -130,7 +130,7 @@ export default class Adminitem extends Component {
                             
                             </div>
                             
-                            <button type="submit" className="btn btn-secondary">Guardar</button>
+                            <button type="submit" className="btn btn-info">Guardar</button>
                         </form>
                     </div>
                 

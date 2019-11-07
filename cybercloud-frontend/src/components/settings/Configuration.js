@@ -11,7 +11,7 @@ export default class Configuration extends Component {
         message: ""
     }
     getConfiguration = async () => {
-        const res = await axios.get('http://localhost:4000/api/configuration')
+        const res = await axios.get('http://'+global.ip+':4000/api/configuration')
         this.setState({
             terminals: res.data.terminals,
             rates: res.data.rates,
@@ -21,18 +21,18 @@ export default class Configuration extends Component {
         });
     }
     addTerminal = async()=>{
-        await axios.post('http://localhost:4000/api/configuration');
+        await axios.post('http://'+global.ip+':4000/api/configuration');
         this.getConfiguration();
     }
     deleteTerminal = async()=>{
-        await axios.delete('http://localhost:4000/api/configuration');
+        await axios.delete('http://'+global.ip+':4000/api/configuration');
         this.getConfiguration();
     }
     componentDidMount(){
         this.getConfiguration()
     }
     updateSetting=async()=>{
-        const resp = await axios.put('http://localhost:4000/api/configuration',{
+        const resp = await axios.put('http://'+global.ip+':4000/api/configuration',{
             name: this.state.name,
             rate: this.state.selectedRate
         })
@@ -93,7 +93,6 @@ export default class Configuration extends Component {
                                 <label>Numero de terminales</label>
                                 <div className="form-group">
                             <button onClick={this.deleteTerminal}  className="btn btn-secondary"><i className="fas fa-arrow-alt-circle-down"></i></button><strong>Cantidad: {this.state.terminals.length}</strong><button onClick={this.addTerminal}  className="btn btn-secondary"><i className="fas fa-arrow-alt-circle-up"></i></button></div>
-                        
                     </div>
                 </div>
             </div>

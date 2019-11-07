@@ -15,7 +15,7 @@ export default class Items extends Component {
         this.getItembag();
     }
     getItembag = async () => {
-        const res = await axios.get('http://localhost:4000/api/itembag')
+        const res = await axios.get('http://'+global.ip+':4000/api/itembag')
         console.log(res)
         this.setState({
             itembag: res.data.items,
@@ -23,7 +23,7 @@ export default class Items extends Component {
         });
     }
     addItembag = async(id, price, description)=>{
-        await axios.post('http://localhost:4000/api/itembag', {
+        await axios.post('http://'+global.ip+':4000/api/itembag', {
             id,
             price,
             description
@@ -32,15 +32,15 @@ export default class Items extends Component {
     }
     deleteItembag = async(id, price)=>{
         console.log(id)
-        await axios.delete('http://localhost:4000/api/itembag/'+id)
+        await axios.delete('http://'+global.ip+':4000/api/itembag/'+id)
         this.getItembag();
     }
     deleteItembags = async()=>{
-        await axios.delete('http://localhost:4000/api/itembag/')
+        await axios.delete('http://'+global.ip+':4000/api/itembag/')
         this.getItembag();
     }
     getItems = async () => {
-        const res = await axios.get('http://localhost:4000/api/item')
+        const res = await axios.get('http://'+global.ip+':4000/api/item')
         this.setState({
             items: res.data
         });

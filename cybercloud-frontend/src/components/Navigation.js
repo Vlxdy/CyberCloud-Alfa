@@ -1,58 +1,33 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import Axios from 'axios';
-
 export default class Navigation extends Component {
-    state={
-        notifications:0,
-        box:{}
-    };
-    componentDidMount(){
-        this.timer = setInterval(() => {
-            this.getNotifications();
-            if(this.props.user.permissions>0)
-                this.getBox()
-          }, 1000);
-    };
-    componentWillUnmount() {
-        clearInterval(this.timer);
-    }
     closeBox=async()=>{
         if(this.props.user.permissions>0)
         {
-            const response = window.confirm("Esta seguro que desea cerrar la caja: "+this.state.box.number);
+            const response = window.confirm("Esta seguro que desea cerrar la caja: "+this.props.box.number);
             if(response)
-            await Axios.post('http://localhost:4000/api/box/');
+            await Axios.post('http://'+global.ip+':4000/api/box/');
         }
-    }
-    getBox= async()=>{
-        const box = await Axios.delete('http://localhost:4000/api/box/');
-        this.setState({
-            box: box.data
-        })
-    }
-    getNotifications = async()=>{
-        const petitions = await Axios.get('http://localhost:4000/api/petition/');
-        this.setState({
-            notifications: petitions.data.length
-        })
     }
     render() {
         return (
-            <div className="pos-f-t">
-            <nav className="navbar navbar-expand-lg navbar-dark bg-dark p-3">
+            <div className="pos-f-t" >
+            <nav id="narvar" className="navbar navbar-expand-lg navbar-dark p-3">
 
                 <div className="container">       
                         {this.props.user.permissions>0 && (
-                            <div className="card col-4">
-                            Numero de Caja: {this.state.box.number} <br />
-                            Monto Recaudado: {(this.state.box.itemPrice+this.state.box.terminalPrice).toFixed(2)} Bs
+                            <Link to="/registry" className="card col-4">
+                            <div >
+                            Numero de Caja: {this.props.box.number} <br />
+                            Monto Recaudado: {(this.props.box.itemPrice+this.props.box.terminalPrice+this.props.box.userRecharge).toFixed(2)} Bs
                             </div>
+                            </Link>
                         )}
                         <div className="col-2 row align-items-center">
                             <div>
                             <Link className="navbar-brand" to="/">
-                            <h3>CyberCloud</h3>
+                            <img src="../../logo.png" height="70%" width="70%" alt="error"/>
                             </Link>
                             </div>
                         </div>
@@ -61,64 +36,86 @@ export default class Navigation extends Component {
                             { this.props.logged==="NOT_LOGGED_IN" && (
                                 <ul className="navbar-nav ml-auto">
                             <li className="nav-item">
-                                <Link to="/signin" className="nav-link">Iniciar Sesión</Link>
+                                <Link to="/signin" className="nav-link">
+                                <span className="badge badge-info">Iniciar Sesión</span>
+                                </Link>
                             </li>
                             <li className="nav-item">
-                                <Link to="/signup" className="nav-link">Registrarse</Link>
+                                <Link to="/signup" className="nav-link">
+                                <span className="badge badge-info">Registrarse</span>
+                                </Link>
                             </li>
                             </ul>
                             )}
                             { this.props.logged==="LOGGED_IN" && (
                                 <ul className="nav nav-tabs ml-auto">
-                                <li className="nav-item dropdown bg-secondary">
-                                  <a className="nav-link dropdown-toggle text-white bg-secondary" data-toggle="dropdown" href="\" role="button" aria-haspopup="true" aria-expanded="false">{this.props.user.name.toUpperCase()+"    " }<strong className="text-white">SALDO: {this.props.user.money.toFixed(2)} Bs.</strong></a>
-                                  <div className="dropdown-menu bg-secondary">
+                                <li className="nav-item dropdown bg-info">
+                                  <a className="nav-link dropdown-toggle text-white bg-info" data-toggle="dropdown" href="\" role="button" aria-haspopup="true" aria-expanded="false">{this.props.user.name.toUpperCase()+"    " }<strong className="text-white">CREDITO: {this.props.user.money.toFixed(2)} Bs.</strong></a>
+                                  <div className="dropdown-menu bg-info">
                                       {
                                           this.props.user.permissions>0 && (
-                                            <Link to="/adminitem" className="dropdown-item bg-secondary text-white">Administrar Items</Link>
+                                            <Link to="/adminitem" className="dropdown-item bg-info text-white">Administrar Items</Link>
                                           )
                                       }
                                       {
                                           this.props.user.permissions>0 && (
-                                            <Link to="/petitions" className="dropdown-item bg-secondary text-white">Pedidos: {this.state.notifications}</Link>
+                                            <Link to="/petitions" className="dropdown-item bg-info text-white">Pedidos: {this.props.petitionsUsers.length}</Link>
                                             )
                                       }
                                       {
                                           this.props.user.permissions>0 && (
-                                            <Link to="/setting" className="dropdown-item bg-secondary text-white">Configuraciones</Link>
+                                            <Link to="/setting" className="dropdown-item bg-info text-white">Configuraciones</Link>
                                             )
                                       }
                                       {
                                           this.props.user.permissions>0 && (
-                                            <Link to="/users" className="dropdown-item bg-secondary text-white">Usuarios</Link>
+                                            <Link to="/users" className="dropdown-item bg-info text-white">Usuarios</Link>
                                             )
                                       }
                                       {
                                           this.props.user.permissions>0 && (
-                                            <Link to="/itemterminal" className="dropdown-item bg-secondary text-white">Vender Productor a las Terminales</Link>
+                                            <Link to="/itemterminal" className="dropdown-item bg-info text-white">Vender Productos</Link>
                                             )
                                       }
-                                    <Link to="/" onClick={this.closeBox} className="dropdown-item bg-secondary text-white">Cerrar la caja</Link>
-                                    <Link to="/history" className="dropdown-item bg-secondary text-white">Historial</Link>
-                                    <Link onClick={this.props.handleLogout} to="/" className="dropdown-item bg-secondary text-white">Cerrar Sesión</Link>
+                                      {
+                                          this.props.user.permissions>0 && (
+                                            <Link to="/" onClick={this.closeBox} className="dropdown-item bg-info text-white">Cerrar la caja</Link>
+                                            )
+                                      }
+                                      {
+                                          this.props.user.permissions>0 && (
+                                            <Link to="/registry" className="dropdown-item bg-info text-white">Registros</Link>
+                                            )
+                                      }
+                                    
+                                    <Link to="/petitionsuser" className="dropdown-item bg-info text-white">Mis Peticiones: {this.props.petitions.length}</Link>
+                                    <Link to="/history" className="dropdown-item bg-info text-white">Historial</Link>
+                                    <Link onClick={this.props.handleLogout} to="/" className="dropdown-item bg-info text-white">Cerrar Sesión</Link>
                                     
                                   </div>
                                 </li>
                               </ul>
                               
                             )}
-                            <div className="p-4">
-                        {this.props.logged==="LOGGED_IN" && (
-                    <Link to="/buy">
-                    <i className="fas fa-shopping-cart icon-white fa-lg" title="Comprar Artículos"></i>
-                    <span className="badge badge-danger badge-pill">{this.state.notifications}</span>
+                    <div className="p-4">
+                    {this.props.logged==="LOGGED_IN" && (
+                    <Link to="/petitionsuser">
+                    <i className="fas fa-shopping-basket icon-white fa-lg" title="Comprar Artículos"></i>
+                    <span className="badge badge-primary badge-pill">{this.props.petitions.length}</span>
                     </Link>
                     )}
                     </div>
+                    <div className="p-1">
+                    {this.props.logged==="LOGGED_IN" && this.props.user.permissions>0 && (
+                    <Link to="/petitions">
+                    <i className="fas fa-bell icon-white fa-lg" title="Notificación de Peticiones"></i>
+                    <span className="badge badge-primary badge-pill">{this.props.petitionsUsers.length}</span>
+                    </Link>
+                    )}
+                    </div>
+
                     </div>
                     </div>
-                    
-                    
                 </div>
             </nav>
             </div>

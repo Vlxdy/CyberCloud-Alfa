@@ -24,13 +24,13 @@ export default class Signin extends Component {
       
     const { email, password } = this.state;
     axios.post(
-        'http://localhost:4000/api/signin',
+        'http://'+global.ip+':4000/api/signin',
         {
             email: email,
             password: password
         }
       ).then(response => {
-        console.log(response.data)
+        //console.log(response.data)
           this.props.handleLogin(response.data);
           this.props.history.push('/') 
         
@@ -45,6 +45,7 @@ export default class Signin extends Component {
         <div className="container">
         <div className="row justify-content-center align-items-center">
             <div className="card col-4">
+            <img src="../../../logo.png" height="100%" width="100%" alt="error"/>
             <h1 className="text-center">Iniciar Sesión</h1>
         <form onSubmit={this.handleSubmit} className="mb-4">
             <div className="form-group">
@@ -71,7 +72,7 @@ export default class Signin extends Component {
             required
           />
           </div>
-          <button type="submit" className="btn btn-secondary">Iniciar Sesión</button>
+          <button type="submit" className="btn btn-info">Iniciar Sesión</button>
         </form>
       </div>
       </div>

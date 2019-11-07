@@ -22,13 +22,13 @@ export default class Rates extends Component {
         this.getTimes();
     }
     getRates = async ()=>{
-        const res = await axios.get('http://localhost:4000/api/rate');
+        const res = await axios.get('http://'+global.ip+':4000/api/rate');
         this.setState({
             rates:res.data
         });
     }
     getTimes = async () => {
-        const res = await axios.get('http://localhost:4000/api/interval');
+        const res = await axios.get('http://'+global.ip+':4000/api/interval');
         this.setState({
             times: res.data
         });
@@ -56,7 +56,7 @@ export default class Rates extends Component {
     onSubmitTime = async () =>{
         if(this.state.hours > 0 || this.state.minutes>0){
             const milise = this.state.hours*3600000 + this.state.minutes*60000;
-            await axios.post('http://localhost:4000/api/interval',{
+            await axios.post('http://'+global.ip+':4000/api/interval',{
                 time: milise,
                 price: this.state.price
             });
@@ -71,7 +71,7 @@ export default class Rates extends Component {
     }
     onSubmitRate = async () => {
         if(this.state.times.length > 0 && this.state.name !== ""){
-            await axios.post('http://localhost:4000/api/rate',{
+            await axios.post('http://'+global.ip+':4000/api/rate',{
                 name: this.state.name
             });
             this.getTimes();
@@ -83,14 +83,16 @@ export default class Rates extends Component {
         else window.alert("Llene los campos necesarios.");
     }
     deleteTime = async (id) => {
-        await axios.delete('http://localhost:4000/api/interval/' + id);
+        await axios.delete('http://'+global.ip+':4000/api/interval/' + id);
         this.getTimes();
     }
     deleteRate = async (id) =>{
         const response = window.confirm("¿Está seguro que desea eliminarlo?")
         if(response){
-            await axios.delete('http://localhost:4000/api/rate/'+id);
-            this.getRates();
+            await axios.delete('http://'+global.ip+':4000/api/rate/'+id);
+            setTimeout(() => {
+                this.getRates();
+            }, 500);
         }
     }
     render() {

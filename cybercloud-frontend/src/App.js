@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import Navigation from './components/Navigation';
 
-import Terminals from './components/terminals/Terminals'
+import Terminals from './components/terminalsbeta/Terminals'
 
 import Items from './components/items/Items'
 
@@ -22,6 +22,8 @@ import Buy from './components/items/Buy'
 
 import Petitions from './components/petitions/Petitions'
 
+import PetitionsUser from './components/petitions/PetitionsUser'
+
 import Rates from './components/rates/Rates'
 
 import Settings from './components/settings/Settings'
@@ -34,45 +36,27 @@ import ItemTerminal from './components/items/ItemTerminal'
 
 import UserHistory from './components/history/UserHistory'
 
+import Registry from './components/registry/Registry'
+
 class App extends React.Component {
   constructor() {
     super();
-
     this.state = {
       loggedInStatus: "NOT_LOGGED_IN",
       user: {},
       token: "",
-      money: 0
+      money: 0,
+      box:{
+        number: 0,
+        startdate: "2019-11-03T03:47:34.363Z",
+        itemPrice: 0,
+        terminalPrice: 0
+      },
+      petitions:[],
+      petitionsUsers:[]
     };
     this.handleLogin = this.handleLogin.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
-  }
-  checkLoginStatus() {
-    axios
-      .get("http://localhost:3001/logged_in", { withCredentials: true })
-      .then(response => {
-        if (
-          response.data.logged_in &&
-          this.state.loggedInStatus === "NOT_LOGGED_IN"
-        ) {
-          this.setState({
-            loggedInStatus: "LOGGED_IN",
-            user: response.data.user
-          });
-        } else if (
-          !response.data.logged_in &
-          (this.state.loggedInStatus === "LOGGED_IN")
-        ) {
-          this.setState({
-            loggedInStatus: "NOT_LOGGED_IN",
-            user: {},
-            token: ""
-          });
-        }
-      })
-      .catch(error => {
-        console.log("check login error", error);
-      });
   }
   componentDidMount() {
     //this.checkLoginStatus();
@@ -90,7 +74,7 @@ class App extends React.Component {
       })
       this.timer = setInterval(async() => {
         this.getUser();
-      }, 2000);
+      }, 1000);
     }
   }
   componentWillUnmount() {
@@ -100,16 +84,27 @@ class App extends React.Component {
     this.setState({
       loggedInStatus: "NOT_LOGGED_IN",
       user: {},
-      token: ""
+      token: "",
+      box: {
+        number: 0,
+        startdate: "2019-11-03T03:47:34.363Z",
+        itemPrice: 0,
+        terminalPrice: 0
+      },
+      petitions:[]
     });
     localStorage.clear()
     clearInterval(this.timer);
   }
   getUser=async()=>{
-    const user1 = await axios.get("http://localhost:4000/api/user/"+this.state.user._id);
+    const user1 = await axios.get("http://"+global.ip+":4000/api/user/"+this.state.user._id);
     this.setState({
-      user: user1.data
+      user: user1.data,
+      box:user1.data.box,
+      petitions: user1.data.petitions,
+      petitionsUsers: user1.data.petitionsUser,
     })
+    //console.log(this.state);
   }
   handleLogin(data) {
     this.setState({
@@ -121,13 +116,15 @@ class App extends React.Component {
     localStorage.setItem('datos', JSON.stringify(this.state));
     this.timer = setInterval(async() => {
       this.getUser();
-    }, 2000);
+    }, 1000);
   }
 
   render() {
     return (
       <Router>
-      <Navigation user={this.state.user} logged={this.state.loggedInStatus} handleLogout={this.handleLogout}/>
+      <Navigation user={this.state.user} logged={this.state.loggedInStatus} handleLogout={this.handleLogout}
+          box={this.state.box} petitions={this.state.petitions} petitionsUsers={this.state.petitionsUsers}
+      />
       <div className="container p-4">
         <Route
           path="/"
@@ -137,6 +134,7 @@ class App extends React.Component {
             {...props}
             user={this.state.user}
             token={this.state.token}
+            logged={this.state.loggedInStatus}
             />
           )}/>
         <Route
@@ -256,6 +254,31 @@ class App extends React.Component {
           render={props => (
           <Petitions
            {...props}
+            logged={this.state.loggedInStatus}
+            user={this.state.user}
+            petitionsUsers={this.state.petitionsUsers}
+            />
+            )}
+          />
+          <Route
+          exact
+          path={"/petitionsuser"}
+          render={props => (
+          <PetitionsUser
+           {...props}
+            petitions={this.state.petitions}
+            logged={this.state.loggedInStatus}
+            user={this.state.user}
+            />
+            )}
+          />
+          <Route
+          exact
+          path={"/registry"}
+          render={props => (
+          <Registry
+           {...props}
+            petitions={this.state.petitions}
             logged={this.state.loggedInStatus}
             user={this.state.user}
             />

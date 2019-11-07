@@ -3,7 +3,7 @@ const { ipcRenderer } = require('electron');
 let number = 0;
 const form = document.querySelector('form');
 form.addEventListener('submit', e => {
-    e.preventDefault();
+
     const emailClient = document.querySelector('#email').value;
     const passwordClient = document.querySelector('#password').value;
     const newLogin = {
@@ -11,9 +11,7 @@ form.addEventListener('submit', e => {
         password: passwordClient
     };
     ipcRenderer.send('client:login', newLogin);
-    //iniciarSession();
 });
-
 ipcRenderer.on('login:error', e => {
     var current = document.getElementById("alert");
     current.innerHTML = alertTemplate;
@@ -22,7 +20,6 @@ ipcRenderer.on('login:credit', e => {
     var current = document.getElementById("alert");
     current.innerHTML = saldoTemplate;
 });
-
 function assignanumero() {
     jsonfile.readFile('configuration.json', function (err, obj) {
         if (err == null) {
@@ -33,17 +30,14 @@ function assignanumero() {
         }
     });
 }
-
 assignanumero();
 setTimeout(() => terminalnumber(), 500);
-
 function terminalnumber() {
     // crea un nuevo div 
     // y añade contenido 
     const numberTemplate =
         `<div class="card"><h1 class="text-center display-1 font-weight-bold">` + number +
         `</h1></div>`;
-    console.log(numberTemplate)
     var currentDiv = document.getElementById("number");
     //document.body.insertBefore(newDiv, currentDiv);
     currentDiv.innerHTML = numberTemplate;
@@ -54,7 +48,6 @@ function iniciarSession() {
     current.innerHTML = alertTemplate;
     //document.body.innerHTML = loginTemplate;
 }
-
 const newProductTemplate = `
     <form class="p-4">
       <div class="form-group">

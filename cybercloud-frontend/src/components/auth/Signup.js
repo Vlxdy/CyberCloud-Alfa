@@ -24,7 +24,7 @@ export default class Signup extends Component {
         const { email, name, password, password_confirmation, phone } = this.state;
         axios
             .post(
-                "http://localhost:4000/api/auth",
+                "http://"+global.ip+":4000/api/auth",
                 
                 {
                         name,
@@ -116,7 +116,7 @@ export default class Signup extends Component {
                     />
                     </div>
 
-                    <button type="submit" className="btn btn-secondary">Registrar</button>
+                    <button type="submit" className="btn btn-info">Registrar</button>
                 </form>
             </div>
             </div>

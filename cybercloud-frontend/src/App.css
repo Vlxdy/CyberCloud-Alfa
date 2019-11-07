@@ -2,7 +2,8 @@ body {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    user-select: none; 
+    user-select: none;
+    background-color: #F4F7F9;
 }
 .icon-white {
     color: white;
@@ -15,4 +16,46 @@ body {
     background-image: url("/la/url/de/la/imagen.png");
     background-repeat: no-repeat;
     background-size: cover;
+}
+#principal {
+    max-width: 200px;
+}
+#panelcyber{
+    top: 16%;
+    left: 1%;
+    height: 600px;
+    width: 200px;
+    background-color: #007bff;
+}
+#panelcyber1{
+    top: 16%;
+    left: 1%;
+    height: 600px;
+    width: 200px;
+    background-color: #17a2b8;
+}
+#panelcyber2{
+    top: 16%;
+    left: 1%;
+    height: 600px;
+    width: 200px;
+    background-color: #28a745;
+}
+
+#buycyber{
+    top: 85%;
+    left: 90%;
+}
+#usercyber{
+    top: 72%;
+    left: 90%;
+}
+#panel1{
+    margin-left: 85px;
+}
+#iconaweson{
+    color:cornsilk;
+}
+#narvar{
+    background-color: #BEDDFF;
 }

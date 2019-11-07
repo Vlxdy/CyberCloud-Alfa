@@ -7,6 +7,8 @@ import * as serviceWorker from './serviceWorker';
 
 import {register} from 'timeago.js'
 
+global.ip="192.168.100.106"
+
 const localeFunc = (number, index, total_sec) => {
   return [
       ['justo ahora', 'en un rato'],

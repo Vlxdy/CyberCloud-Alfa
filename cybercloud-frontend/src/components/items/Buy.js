@@ -22,7 +22,7 @@ export default class Buy extends Component {
         }
     }
     getItembag = async () => {
-        const res = await axios.get('http://localhost:4000/api/itemuser/' + this.props.user._id)
+        const res = await axios.get('http://'+global.ip+':4000/api/itemuser/' + this.props.user._id)
         //console.log("asdasd")
         //console.log(res)
         this.setState({
@@ -31,7 +31,7 @@ export default class Buy extends Component {
         });
     }
     addItembag = async (id, price, description) => {
-        await axios.put('http://localhost:4000/api/itemuser/' + this.props.user._id, {
+        await axios.put('http://'+global.ip+':4000/api/itemuser/' + this.props.user._id, {
             article: id,
             price,
             description
@@ -39,16 +39,16 @@ export default class Buy extends Component {
         this.getItembag();
     }
     deleteItembag = async (article) => {
-        await axios.delete('http://localhost:4000/api/itemuser/' + this.props.user._id, { headers: {}, data: { article } });
+        await axios.delete('http://'+global.ip+':4000/api/itemuser/' + this.props.user._id, { headers: {}, data: { article } });
         this.getItembag();
     }
     deleteItembags = async () => {
         //console.log("asdasdasd")
-        await axios.delete('http://localhost:4000/api/itemuser/', { headers: {}, data: { id: this.props.user._id } });
+        await axios.delete('http://'+global.ip+':4000/api/itemuser/', { headers: {}, data: { id: this.props.user._id } });
         this.getItembag();
     }
     getItems = async () => {
-        const res = await axios.get('http://localhost:4000/api/item')
+        const res = await axios.get('http://'+global.ip+':4000/api/item')
         this.setState({
             items: res.data
         });
@@ -61,7 +61,7 @@ export default class Buy extends Component {
             if (this.props.user.money >= this.state.cost) {
                 try {
                     if (response) {
-                        await axios.post('http://localhost:4000/api/petition', {
+                        await axios.post('http://'+global.ip+':4000/api/petition', {
                             user: this.props.user._id,
                             username: this.props.user.name,
                             items: this.state.itembag
@@ -86,16 +86,16 @@ export default class Buy extends Component {
                         {
                             this.state.items.map(item => (
                                 <div
-                                    className="card card-body m-1 col-2 p-1 align-items-center"
+                                    className="card card-body m-1 list-group-item-action col-2 p-1 align-items-center"
                                     key={item._id}
                                     onDoubleClick={() => this.addItembag(item._id, item.price, item.description)}>
                                     <img
-                                        src={"http://localhost:4000/images/" + item.image}
+                                        src={"http://'"+global.ip+"':4000/images/" + item.image}
                                         className="rounded float-left"
                                         height="100"
                                         width="100"
                                         alt="Error"
-                                        onError={(e) => { e.target.src = "http://localhost:4000/images/item.png" }} />
+                                        onError={(e) => { e.target.src = "http://"+global.ip+":4000/images/item.png" }} />
                                     <h6>{item.description}</h6> <h4>{item.price.toFixed(2)} Bs</h4>
                                 </div>
                             )
@@ -103,11 +103,11 @@ export default class Buy extends Component {
                         }
                     </div>
                 </div>
-                <div className="col-md-4 bg-dark text-white p-4">
+                <div className="col-md-4 bg-info text-white p-4">
                     <ul className="list-group">
                         {
                             this.state.itembag.map(itemb => (
-                                <li className="list-group-item list-group-item-action list-group-item-secondary " key={itemb._id} onDoubleClick={() => this.deleteItembag(itemb.article)}>
+                                <li className="list-group-item list-group-item-action list-group-item-info " key={itemb._id} onDoubleClick={() => this.deleteItembag(itemb.article)}>
                                     <h5>{itemb.description} </h5>
                                     <h5><strong>Precio:</strong>  {itemb.price.toFixed(2)} Bs <strong>Cantidad:</strong> {itemb.amount}</h5>
                                     <h4> <strong>Precio Total: </strong> {(itemb.amount * itemb.price).toFixed(2)}</h4>

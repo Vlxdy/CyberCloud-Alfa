@@ -34,6 +34,12 @@ rechargeCtrl.createRecharge = async (req,res)=> {
 rechargeCtrl.deleteRecharge = async (req,res)=> {
 }
 rechargeCtrl.getRecharge = async(req,res)=> {
+    try {
+        const recharges = await Recharge.find({ numberBox: req.params.id });
+        return res.json(recharges);
+    } catch (error) {
+        return res.json(error);
+    }
 }
 rechargeCtrl.updateRecharge = async(req,res)=> {
 }

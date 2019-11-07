@@ -13,14 +13,14 @@ export default class Users extends Component {
         this.getUsers();
     }
     getUsers = async () => {
-        const req = await axios.get('http://localhost:4000/api/auth/')
+        const req = await axios.get('http://'+global.ip+':4000/api/auth/')
         this.setState({
             users: req.data
         })
         console.log(this.state.users)
     }
     getUser = async (id) =>{
-        const req = await axios.get('http://localhost:4000/api/auth/'+id);
+        const req = await axios.get('http://'+global.ip+':4000/api/auth/'+id);
         this.setState({
             select: id,
             user: req.data.user,
@@ -36,7 +36,7 @@ export default class Users extends Component {
     onSubmitRecharge=async()=>{
         const response = window.confirm("¿Está seguro de asigando "+parseFloat(this.state.mont)+" Bs a "+this.state.user.name+ "?");
         if(response){
-            await axios.post('http://localhost:4000/api/recharge',{
+            await axios.post('http://'+global.ip+':4000/api/recharge',{
                 user_id:this.state.user._id,
                 operator_id:this.props.user._id,
                 amount: this.state.mont

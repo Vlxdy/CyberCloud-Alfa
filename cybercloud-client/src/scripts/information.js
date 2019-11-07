@@ -1,6 +1,7 @@
 const fs = require('fs');
 var jsonfile = require('jsonfile');
 const axios = require('axios');
+
 async function configurar() {
     await jsonfile.readFile('configuration.json', function (err, obj) {
         if (err==null){

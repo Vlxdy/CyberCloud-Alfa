@@ -28,7 +28,7 @@ export default class ItemTerminal extends Component {
         }*/
     }
     getTerminals = async()=>{
-        const res = await axios.get('http://localhost:4000/api/itemterminal');
+        const res = await axios.get('http://'+global.ip+':4000/api/itemterminal');
         this.setState({
             terminals: res.data
         });
@@ -40,10 +40,10 @@ export default class ItemTerminal extends Component {
                 break;
             }
         }
-        console.log(res.data)
+//        console.log(res.data)
     }
     getItembag = async () => {
-        const res = await axios.get('http://localhost:4000/api/bagterminal/')
+        const res = await axios.get('http://'+global.ip+':4000/api/bagterminal/')
         //console.log("asdasd")
         //console.log(res)
         this.setState({
@@ -52,7 +52,7 @@ export default class ItemTerminal extends Component {
         });
     }
     addItembag = async (id, price, description) => {
-        await axios.post('http://localhost:4000/api/bagterminal', {
+        await axios.post('http://'+global.ip+':4000/api/bagterminal', {
             id,
             price,
             description
@@ -60,28 +60,28 @@ export default class ItemTerminal extends Component {
         this.getItembag();
     }
     deleteItembag = async (id) => {
-        await axios.delete('http://localhost:4000/api/bagterminal/'+id, { headers: {}, data: { } });
+        await axios.delete('http://'+global.ip+':4000/api/bagterminal/'+id, { headers: {}, data: { } });
         this.getItembag();
     }
     deleteItembags = async () => {
         //console.log("asdasdasd")
-        await axios.delete('http://localhost:4000/api/bagterminal/', { headers: {}, data: { id: this.props.user._id } });
+        await axios.delete('http://'+global.ip+':4000/api/bagterminal/', { headers: {}, data: { id: this.props.user._id } });
         this.getItembag();
     }
     getItems = async () => {
-        const res = await axios.get('http://localhost:4000/api/item')
+        const res = await axios.get('http://'+global.ip+':4000/api/item')
         this.setState({
             items: res.data
         });
         //console.log(res)
     }
     buyItems = async () => {
-        console.log(this.state.selected)
+        //console.log(this.state.selected)
         if (this.state.cost > 0 && this.state.selected!=="") {
             const response = window.confirm('Está seguro de realizar la venta con el costo de ' + this.state.cost + ' Bs.');
             try {
                 if (response) {
-                    const res = await axios.post('http://localhost:4000/api/itemterminal/'+this.state.selected);
+                    const res = await axios.post('http://'+global.ip+':4000/api/itemterminal/'+this.state.selected);
                     console.log(res)
                 }
             } catch (error) {
@@ -115,12 +115,12 @@ export default class ItemTerminal extends Component {
                                     key={item._id}
                                     onDoubleClick={() => this.addItembag(item._id, item.price, item.description)}>
                                     <img
-                                        src={"http://localhost:4000/images/" + item.image}
+                                        src={"http://"+global.ip+":4000/images/" + item.image}
                                         className="rounded float-left"
                                         height="100"
                                         width="100"
                                         alt="Error"
-                                        onError={(e) => { e.target.src = "http://localhost:4000/images/item.png" }} />
+                                        onError={(e) => { e.target.src = "http://"+global.ip+":4000/images/item.png" }} />
                                     <h6>{item.description}</h6> <h4>{item.price.toFixed(2)} Bs</h4>
                                 </button>
                             )

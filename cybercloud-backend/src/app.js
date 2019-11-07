@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const fileUpload = require('express-fileupload')
-const { getSettings, setSettings} = require('./settings')
+
 // settings
 app.set('port', process.env.PORT || 4000);
 
@@ -37,6 +37,8 @@ app.use('/api/itemterminal', require('./routes/itemterminal'));
 app.use('/api/bagterminal', require('./routes/bagterminal'));
 app.use('/api/primary', require('./routes/primary'));
 app.use('/api/userhistory', require('./routes/userhistory'));
+app.use('/api/terminalsbeta', require('./routes/terminalsbeta'));
+app.use('/api/registry', require('./routes/registry'));
 
 
 //image upload
@@ -48,6 +50,6 @@ app.post('/api/upload',(req,res) => {
     })
     //console.log(req.files.image);
 })
-getSettings();
+
 
 module.exports = app;

@@ -67,6 +67,12 @@ petitionsCtrl.deletePetition = async (req,res)=> {
     }
 }
 petitionsCtrl.getPetition = async(req,res)=> {
+    try {
+        const petitions = await Petitions.find({user:req.params.id});
+        return res.status(200).json(petitions)
+    } catch (error) {
+        return res.status(400).send(error)
+    }
 }
 petitionsCtrl.updatePetitions = async(req,res)=> {
     try {
