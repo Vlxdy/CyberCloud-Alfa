@@ -1,14 +1,19 @@
 const { Schema, model } = require('mongoose');
 const SettingsSchema = new Schema({
-    numberBox:{
+    numberBox: {
         type: Number
     },
-    rate:{
-        type: String,
-        default: "0"
+    boxStatus: {
+        type: Boolean,
+        default: false
     },
-    name:{
-        type:String,
+    rate: [
+        {
+            type: String                
+        }
+    ],
+    name: {
+        type: String,
         default: "CyberCloud"
     }
 });

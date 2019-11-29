@@ -36,6 +36,7 @@ export default class Signin extends Component {
         
       })
       .catch(error => {
+        window.alert("Error, por favor revise los datos.")
         console.log("login error", error);
       });
     event.preventDefault();

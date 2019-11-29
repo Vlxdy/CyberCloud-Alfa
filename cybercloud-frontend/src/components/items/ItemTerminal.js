@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 
-//import { format } from 'timeago.js'
-//import { Link } from 'react-router-dom'
-
 export default class ItemTerminal extends Component {
     state = {
         items: [],
@@ -16,36 +13,38 @@ export default class ItemTerminal extends Component {
         this.getItems();
         this.getItembag();
         this.getTerminals();
-        /*
-        if (this.props.logged === "LOGGED_IN") {
-            this.getItems();
-            this.getItembag();
-            console.log(this.props.user._id)
-        }
-        else {
-            window.alert("Por favor inicie sesión.")
-            this.props.history.push('/signin')
-        }*/
     }
     getTerminals = async()=>{
         const res = await axios.get('http://'+global.ip+':4000/api/itemterminal');
-        this.setState({
-            terminals: res.data
-        });
+        const vect =[{
+                "user": {
+                  "id": "0",
+                  "name": ""
+                },
+                "using": true,
+                "accumulated": 0,
+                "price": 0,
+                "rate": "5dd2a3e869fe5e00f018758c",
+                "rate_i": 0,
+                "_id": "0",
+                "number": 0,
+                "times": [],
+                "articles": [],
+                "items": [],
+        }]
         for (let index = 0; index < res.data.length; index++) {
-            if(res.data[index].using){
-                this.setState({
-                    selected: res.data[index]._id
-                });
-                break;
-            }
+            vect.push(res.data[index])
         }
-//        console.log(res.data)
+        console.log(vect);
+        this.setState({
+            terminals: vect
+        });
+        this.setState({
+            selected: "0"
+        });
     }
     getItembag = async () => {
         const res = await axios.get('http://'+global.ip+':4000/api/bagterminal/')
-        //console.log("asdasd")
-        //console.log(res)
         this.setState({
             itembag: res.data.items,
             cost: res.data.cost
@@ -64,7 +63,6 @@ export default class ItemTerminal extends Component {
         this.getItembag();
     }
     deleteItembags = async () => {
-        //console.log("asdasdasd")
         await axios.delete('http://'+global.ip+':4000/api/bagterminal/', { headers: {}, data: { id: this.props.user._id } });
         this.getItembag();
     }
@@ -73,15 +71,15 @@ export default class ItemTerminal extends Component {
         this.setState({
             items: res.data
         });
-        //console.log(res)
     }
     buyItems = async () => {
-        //console.log(this.state.selected)
         if (this.state.cost > 0 && this.state.selected!=="") {
             const response = window.confirm('Está seguro de realizar la venta con el costo de ' + this.state.cost + ' Bs.');
             try {
                 if (response) {
-                    const res = await axios.post('http://'+global.ip+':4000/api/itemterminal/'+this.state.selected);
+                    const res = await axios.post('http://'+global.ip+':4000/api/itemterminal/'+this.state.selected,{
+                        token: this.props.token, operator: this.props.user
+                    });
                     console.log(res)
                 }
             } catch (error) {
@@ -92,6 +90,7 @@ export default class ItemTerminal extends Component {
         else {
             window.alert("Seleccione algun artículos y seleccione una terminal.")
         }
+        this.getItems();
     }
     onChangeTerminal = e => {
         this.setState({
@@ -105,23 +104,27 @@ export default class ItemTerminal extends Component {
     }
     render() {
         return (
+            this.props.user.enabled?
             <div className="row">
                 <div className="col-md-8">
                     <div className="row">
                         {
                             this.state.items.map(item => (
                                 <button
-                                    className="card card-body m-1 col-2 p-1 align-items-center list-group-item-action"
+                                    className={"btn btn-dark m-1 col-2 p-1 align-items-center "+(item.service?"":(item.amount<=0?" disabled":""))}
                                     key={item._id}
-                                    onDoubleClick={() => this.addItembag(item._id, item.price, item.description)}>
+                                    disabled={(item.service?false:(item.amount<=0?true:false))}
+                                    onClick={() => this.addItembag(item._id, item.price, item.description)}>
                                     <img
                                         src={"http://"+global.ip+":4000/images/" + item.image}
-                                        className="rounded float-left"
+                                        className="rounded float-left m-2"
                                         height="100"
                                         width="100"
                                         alt="Error"
                                         onError={(e) => { e.target.src = "http://"+global.ip+":4000/images/item.png" }} />
-                                    <h6>{item.description}</h6> <h4>{item.price.toFixed(2)} Bs</h4>
+                                    <h6>{item.description.toUpperCase()}</h6> <h4>{item.price.toFixed(2)} Bs</h4>
+                                    <h4>{(item.service?"SERVICIO":("C: "+item.amount))}</h4>
+
                                 </button>
                             )
                             )
@@ -129,10 +132,11 @@ export default class ItemTerminal extends Component {
                     </div>
                 </div>
                 <div className="col-md-4 bg-dark text-white p-4">
+                <div className="form-group">
                     <ul className="list-group">
                         {
                             this.state.itembag.map(itemb => (
-                                <li className="list-group-item list-group-item-action list-group-item-secondary " key={itemb._id} onDoubleClick={() => this.deleteItembag(itemb._id)}>
+                                <li className="list-group-item list-group-item-action list-group-item-secondary " key={itemb._id} onClick={() => this.deleteItembag(itemb._id)}>
                                     <h5>{itemb.description} </h5>
                                     <h5><strong>Precio:</strong>  {itemb.price.toFixed(2)} Bs <strong>Cantidad:</strong> {itemb.amount}</h5>
                                     <h4> <strong>Precio Total: </strong> {(itemb.amount * itemb.price).toFixed(2)}</h4>
@@ -140,6 +144,9 @@ export default class ItemTerminal extends Component {
                             ))
                         }
                     </ul>
+                    </div>
+                    <div className="form-group">
+                    
                     <select value={this.state.selected} className="browser-default custom-select" onChange={this.onChangeTerminal}>
                                 {
                                     this.state.terminals.map(terminal => (
@@ -147,13 +154,16 @@ export default class ItemTerminal extends Component {
                                     ))
                                 }
                             </select>
+                            </div>
                     <strong><h2>Precio Total: {this.state.cost.toFixed(2)}</h2></strong>
                     <div >
+                    <div className="form-group">
                         <button className="btn bg-light m-1" onClick={this.deleteItembags}>Limpiar</button>
                         <button className="btn bg-light" onClick={this.buyItems}>Vender</button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </div>:""
         )
     }
 }

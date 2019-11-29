@@ -1,102 +1,79 @@
 import React, { Component } from "react";
 import Axios from "axios";
-import Charge from "./Charge"
 
 class Stopwatch extends Component {
-
   state = {
-      timerOn: this.props.using,
-      timerTime: this.props.times,
-      timerStart: 0,
-      cost: this.props.cost,
-      index: this.props.index
-    };
-  componentDidMount ()  {
-    if (this.props.using) {
-      this.setState({
-        timerOn: true,
-        timerTime: this.state.timerTime,
-        timerStart: Date.now() - this.state.timerTime
-      });
-      this.timer = setInterval(() => {
-        this.setState({
-          timerTime: Date.now() - this.state.timerStart
-        });
-      }, 1000);
-    }
-    
+    active: true
+  }
+  componentDidMount() {
   }
   componentWillUnmount() {
-    clearInterval(this.timer);
   }
-  startTimer = async() => {
-    await Axios.put('http://localhost:4000/api/terminals/' + this.props.id, {token:this.props.token});
+  startTimer = async () => {
     this.setState({
-      timerOn: true,
-      timerTime: this.state.timerTime,
-      timerStart: Date.now() - this.state.timerTime
+      active: false
     });
-    this.timer = setInterval(() => {
+    await Axios.put('http://'+global.ip+':4000/api/terminalsbeta/' + this.props.number, { token: this.props.token })
+    setTimeout(() => {
       this.setState({
-        timerTime: Date.now() - this.state.timerStart
+        active: true
       });
-    }, 10);
-  };
-  stopTimer = async() => {
-    await Axios.put('http://localhost:4000/api/terminals/' + this.props.id, {token:this.props.token});
+    }, 1000)
+  }
+  stopTimer = async () => {
     this.setState({
-      timerOn: false
+      active: false
     });
-    clearInterval(this.timer);
+    await Axios.put('http://'+global.ip+':4000/api/terminalsbeta/' + this.props.number, { token: this.props.token })
+    setTimeout(() => {
+      this.setState({
+        active: true
+      });
+    }, 1000)
   };
-
-  resetTimer = async() => {
-    await Axios.delete('http://localhost:4000/api/terminals/' + this.props.id,
-        {headers: {
-         
-        },
-        data:{token:this.props.token, operator: this.props.user}}
-      );
-  
+  resetTimer = async () => {
     this.setState({
-      timerStart: 0,
-      timerTime: 0,
-      cost: 0,
-      index:0
+      active: false
     });
-    this.props.getTerminals();
-    this.charge.reset();
-  };
-
+    await Axios.delete('http://'+global.ip+':4000/api/terminalsbeta/' + this.props.number,
+      {
+        headers: {},
+        data: { token: this.props.token, operator: this.props.user }
+      })
+    setTimeout(() => {
+      this.setState({
+        active: true
+      });
+    }, 1000)
+  }
   render() {
-
-    const { timerTime } = this.state;
-    let seconds = ("0" + (Math.floor(timerTime / 1000) % 60)).slice(-2);
-    let minutes = ("0" + (Math.floor(timerTime / 60000) % 60)).slice(-2);
-    let hours = ("0" + Math.floor(timerTime / 3600000)).slice(-2);
+    let seconds = ("0" + (Math.floor(this.props.time / 1000) % 60)).slice(-2);
+    let minutes = ("0" + (Math.floor(this.props.time / 60000) % 60)).slice(-2);
+    let hours = ("0" + Math.floor(this.props.time / 3600000)).slice(-2);
     return (
       <div className="">
         <div className="row justify-content-center">
           {hours} : {minutes} : {seconds}
-        <Charge ref={element => {this.charge = element}} cost={this.state.cost} index={this.state.index} rate={this.props.rate} time={this.state.timerTime} auxitime={this.props.auxitime} costItem={this.props.costItem}/>
+          <h5>{(this.props.price + this.props.costItem).toFixed(2)} Bs.</h5>
+          
         </div>
         <div className="row justify-content-center">
-        {this.props.user.permissions===1 &&(
-        <div className="">
-          {this.state.timerOn === false && this.state.timerTime === 0 && (
-            <button className="btn btn-dark m-1" onClick={this.startTimer}><i className="fas fa-play"></i></button>
+          {this.props.user.operator && this.props.user.enabled &&(
+            <div className="">
+              {this.props.using === false && this.props.time === 0 && (
+                <button className="btn btn-dark m-1" onClick={this.startTimer} disabled={!this.state.active}><i className="fas fa-play"></i></button>
+              )}
+              {this.props.using === true && (
+                <button className="btn btn-dark m-1" onClick={this.stopTimer} disabled={!this.state.active}><i className="fas fa-pause"></i></button>
+              )}
+              {this.props.using === false && this.props.time > 0 && (
+                <button className="btn btn-dark m-1" onClick={this.startTimer} disabled={!this.state.active}><i className="fas fa-play"></i></button>
+              )}
+              {this.props.using === false && this.props.time > 0 && (
+                <button className="btn btn-dark m-1" onClick={this.resetTimer} disabled={!this.state.active}><i className="fas fa-coins"></i></button>
+              )}
+            </div>
           )}
-          {this.state.timerOn === true && (
-            <button className="btn btn-dark m-1" onClick={this.stopTimer}><i className="fas fa-pause"></i></button>
-          )}
-          {this.state.timerOn === false && this.state.timerTime > 0 && (
-            <button className="btn btn-dark m-1" onClick={this.startTimer}><i className="fas fa-play"></i></button>
-          )}
-          {this.state.timerOn === false && this.state.timerTime > 0 && (
-            <button className="btn btn-dark m-1" onClick={this.resetTimer}><i className="fas fa-coins"></i></button>
-          )}
-        </div>
-        )}
         </div>
       </div>
     );

@@ -4,6 +4,8 @@ const UsedTerminal = require('../models/UsedTerminal');
 const Terminal = require('../models/Terminal');
 const ItemPurchased = require('../models/ItemPurchased')
 
+const {getTerminal} = require('../data')
+
 usedterminalCtrl.getUsedTerminals = async (req, res) => {
     try {
         const usedterminals = await UsedTerminal.find();
@@ -17,6 +19,7 @@ usedterminalCtrl.createUsedTerminal = async (req, res) => {
 usedterminalCtrl.deleteUsedTerminal = async (req, res) => {
     try {
         const terminal = await getTerminal(req.params.id);
+        console.log(terminal);
         if (terminal.using && terminal.user.id != "0") {
             terminal.times[terminal.times.length - 1].endtime = Date.now()
             const newUsedTerminal = new UsedTerminal({
@@ -26,7 +29,7 @@ usedterminalCtrl.deleteUsedTerminal = async (req, res) => {
                     name: terminal.user.name
                 },
                 price: terminal.price,
-                rate: global.setting.rate,
+                rate: terminal.rate,
                 numberBox: global.setting.numberBox
             });
             await newUsedTerminal.save();

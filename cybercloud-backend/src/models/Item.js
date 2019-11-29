@@ -5,16 +5,19 @@ const itemSchema = new Schema({
         required: true,
         unique: true
     },
+    available:{
+        type: Boolean,
+        default: true
+    },
     price:{
         type: Number,
         required: true
     },
     service:{
         type: Boolean,
-        required: true,
         default: false
     },
-    catidad:{
+    amount:{
         type: Number,
         default: 0
     },

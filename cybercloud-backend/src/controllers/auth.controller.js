@@ -18,35 +18,65 @@ authCtrl.getAuths = async (req, res) => {
                 permissions: auths[index].permissions,
                 money: auths[index].money,
                 phone: auths[index].phone,
-                email: auths[index].email
+                email: auths[index].email,
+                operator: auths[index].operator
             });
         }
         res.json(users)
     } catch (error) {
         res.status(400).send(error)
     }
-
 }
 authCtrl.createAuth = async (req, res) => {
-    console.log("entra")
-    const { name, phone, email, password } = req.body;
-    //checking if the user is already in the database
-    const emailExist = await auth.findOne({ email: email });
-    if (emailExist) return res.status(400).send('Email already exists');
-    //Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(password, salt);
-    const newAuth = new auth({
-        name,
-        phone,
-        email,
-        password: hashPassword
-    });
-    console.log(newAuth)
     try {
-        await newAuth.save();
-        res.send({ status: "created" });
-    } catch (err) {
+        //console.log("entra")
+        const { name, phone, email, password } = req.body;
+        //checking if the user is already in the database
+        const auths = await auth.find();
+        //console.log(auths)
+        if (auths.length > 0) {
+            const emailExist = await auth.findOne({ email: email });
+            if (emailExist) return res.status(400).send('Email already exists');
+            const salt = await bcrypt.genSalt(10);
+            const hashPassword = await bcrypt.hash(password, salt);
+            const newAuth = new auth({
+                name,
+                phone,
+                email,
+                password: hashPassword
+            });
+            await newAuth.save();
+        }
+        else {
+            const emailExist = await auth.findOne({ email: email });
+            if (emailExist) return res.status(400).send('Email already exists');
+            const salt = await bcrypt.genSalt(10);
+            const hashPassword = await bcrypt.hash(password, salt);
+            const newAuth = new auth({
+                name,
+                phone,
+                email,
+                password: hashPassword,
+                permissions: [
+                    true,
+                    true,
+                    true,
+                    true,
+                    true,
+                    true,
+                    true,
+                    true,
+                    true,
+                    true
+                ],
+                operator: true
+            });
+            await newAuth.save();
+        }
+        //console.log(newAuth)
+        return res.send({ status: "created" });
+    } catch (error) {
+        console.log(error)
         res.status(400).send(err);
     }
 }
@@ -54,7 +84,6 @@ authCtrl.signIn = async (req, res) => {
     //lets validate the data before we a user
     //const {error } = loginValidation(req.body)
     //if(error) return res.status(400).send(error.details[0].message);
-
     //checking if the email exists
     try {
         const user = await auth.findOne({ email: req.body.email });
@@ -78,7 +107,6 @@ authCtrl.signIn = async (req, res) => {
                 permissions: user.permissions,
                 money: user.money
             }
-
         })
     } catch (error) {
         return res.status(500).send(error)
@@ -115,17 +143,16 @@ authCtrl.updatePermissions = async (req, res) => {
     }
 
 }
-
 authCtrl.signInTerminal = async (req, res) => {
     try {
         const rate = await Rate.findById(global.setting.rate);
         //console.log(rate)
         const terminal = await Terminal.findOne({ number: req.body.terminal })
         if (terminal.times.length == 0 && terminal.using == false) {
-            console.log(terminal)
+            //console.log(terminal)
             const user = await auth.findOne({ email: req.body.email });
             if (!user) return res.status(400).send('Email is not found');
-            console.log(user)
+            //console.log(user)
             //password is correct
             const validPass = await bcrypt.compare(req.body.password, user.password)
             //console.log(req.body.password)
@@ -135,13 +162,14 @@ authCtrl.signInTerminal = async (req, res) => {
             const token = jwt.sign({ _id: user._id, permissions: user.permissions }, process.env.TOKEN_SECRET);
             //console.log(user)
             //res.header('access-token', token).send(token);
-            if (user.money>=rate.interval[0].cost) {
+            if (user.money >= rate.interval[0].cost) {
                 await Terminal.updateOne(
-                    {number:req.body.terminal}, {
+                    { number: req.body.terminal }, {
                     using: true,
-                    user:{
-                        id:user._id,
-                        name:user.name
+                    rate:global.setting.rate[user.level],
+                    user: {
+                        id: user._id,
+                        name: user.name
                     },
                     $push: {
                         times: {
@@ -162,17 +190,17 @@ authCtrl.signInTerminal = async (req, res) => {
                     }
                 })
             }
-            else{
+            else {
                 console.log(Date())
-            return res.status(500).send({ error: "Credito insuficiente." })
+                return res.status(500).send({ error: "Credito insuficiente." })
             }
         }
-        else {            
+        else {
             console.log(Date())
             return res.status(500).send({ error: "Terminal Ocupada" })
         }
     } catch (error) {
-        return res.status(500).send({error})
+        return res.status(500).send({ error })
     }
 }
 

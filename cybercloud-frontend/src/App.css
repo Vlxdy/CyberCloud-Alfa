@@ -23,21 +23,21 @@ body {
 #panelcyber{
     top: 16%;
     left: 1%;
-    height: 600px;
+    height: 545px;
     width: 200px;
     background-color: #007bff;
 }
 #panelcyber1{
     top: 16%;
     left: 1%;
-    height: 600px;
+    height: 545px;
     width: 200px;
     background-color: #17a2b8;
 }
 #panelcyber2{
     top: 16%;
     left: 1%;
-    height: 600px;
+    height: 545px;
     width: 200px;
     background-color: #28a745;
 }
@@ -58,4 +58,9 @@ body {
 }
 #narvar{
     background-color: #BEDDFF;
+}
+
+#abs-center {
+  display: flex;
+  justify-content: center;
 }

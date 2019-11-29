@@ -26,7 +26,7 @@ export default class userhistory extends Component {
             <div className="row">
                 <div className="col-md-6">
                     <ul className="list-group">
-                        {this.state.itempurchased.map(item => (
+                        {this.state.itempurchased.length>0?(this.state.itempurchased.map(item => (
                             <li key={item._id} type="button" className="list-group-item list-group-item-info list-group-item-action">
                                 <div className="row">
                                     <div className="col-5">
@@ -46,12 +46,12 @@ export default class userhistory extends Component {
                                     </div> 
                                 </div>
                             </li>
-                        ))}
+                        ))):"No realizó ninguna compra de artículos."}
                     </ul>
                 </div>
                 <div className="col-md-6">
                 <ul className="list-group">
-                        {this.state.usedterminals.map(terminal => (
+                        {this.state.usedterminals.length>0?(this.state.usedterminals.map(terminal => (
                             <li key={terminal._id} type="button" className="list-group-item list-group-item-secondary list-group-item-action">
                                 <div className="row">
                                     <div className="col-3">
@@ -68,7 +68,7 @@ export default class userhistory extends Component {
                                     <div className="col-12"><Interval intervals={terminal.terminals}/></div>
                                 </div>
                             </li>
-                        ))}
+                        ))):"No ocupó ninguna Terminal."}
                     </ul>
                 </div>
             </div>

@@ -173,10 +173,6 @@ terminalsCtrl.deleteTerminal = async (req, res) => {
                 price: 0,
                 rate_i: 0
             });
-
-
-
-
             return res.json({ message: "Delete" })
         }
         else {

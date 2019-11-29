@@ -65,7 +65,7 @@ export default class Users extends Component {
                         Celular:
                         <strong>{this.state.user.phone}</strong>
                         <h5>Credito actual: </h5>
-                        <h4><strong>{this.state.user.money} Bs</strong></h4>
+                        <h4><strong>{this.state.user.money.toFixed(2)} Bs</strong></h4>
                         </div>
                     <div className="card card-body m-1">
                     <h3>Agregar Saldo</h3>                        
@@ -77,9 +77,10 @@ export default class Users extends Component {
                                     type="number"
                                     onChange={this.onChangePrice}
                                     placeholder="0 Bs."
+                                    disabled={!this.props.user.enabled}
                                 />
                             </div>
-                            <button className="btn btn-primary" onClick={this.onSubmitRecharge}>Recargar</button>
+                            <button className="btn btn-primary" onClick={this.onSubmitRecharge} disabled={!this.props.user.enabled}>Recargar</button>
                             </div>
                             <div className="form-group">
                                 <h4>Historial</h4>
@@ -110,17 +111,17 @@ export default class Users extends Component {
                                         >
                                         <div className="container">
                                             <div className="row">
-                                                <div className="col-sm">
+                                                <div className="col-3">
                                                     {user.name.substring(0, 15)}
                                                 </div>
-                                                <div className="col-sm">
+                                                <div className="col-4">
                                                     {user.email}
                                                 </div>
-                                                <div className="col-sm">
+                                                <div className="col-3">
                                                     {user.phone}
                                                 </div>
-                                                <div className="col-sm">
-                                                    {user.money} Bs
+                                                <div className="col-2">
+                                                    {user.money.toFixed(2)} Bs
                                                 </div>
                                             </div>
                                         </div>

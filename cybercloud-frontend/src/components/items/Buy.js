@@ -11,15 +11,10 @@ export default class Buy extends Component {
         cost: 0
     }
     componentDidMount() {
-        if (this.props.logged === "LOGGED_IN") {
             this.getItems();
-            this.getItembag();
-            console.log(this.props.user._id)
-        }
-        else {
-            window.alert("Por favor inicie sesión.")
-            this.props.history.push('/signin')
-        }
+            this.timer = setTimeout(() => {
+                this.getItembag();
+            }, 1000)
     }
     getItembag = async () => {
         const res = await axios.get('http://'+global.ip+':4000/api/itemuser/' + this.props.user._id)
@@ -61,12 +56,18 @@ export default class Buy extends Component {
             if (this.props.user.money >= this.state.cost) {
                 try {
                     if (response) {
-                        await axios.post('http://'+global.ip+':4000/api/petition', {
+                        const response = await axios.post('http://'+global.ip+':4000/api/petition', {
                             user: this.props.user._id,
                             username: this.props.user.name,
                             items: this.state.itembag
                         });
-                        this.deleteItembags();
+                        if (response.data.status) {
+                            this.deleteItembags();
+                        }
+                        else{
+                            window.alert("Comprueba la disponibilidad del producto.")
+                        }
+                        
                     }
                 } catch (error) {
                     window.alert("Hubo un error. Consulté a un administrativo.")
@@ -77,27 +78,32 @@ export default class Buy extends Component {
         else {
             window.alert("Seleccione algunos artículos.")
         }
+        this.getItems();
     }
     render() {
         return (
+            this.props.logged === "LOGGED_IN"?
             <div className="row">
                 <div className="col-md-8">
                     <div className="row">
                         {
-                            this.state.items.map(item => (
-                                <div
-                                    className="card card-body m-1 list-group-item-action col-2 p-1 align-items-center"
+                            this.state.items.map(item => ((!item.service)?
+                                <button
+                                    className={"btn btn-dark m-1 col-2 p-1 align-items-center "+(item.amount<=0?" disabled":"")}
                                     key={item._id}
-                                    onDoubleClick={() => this.addItembag(item._id, item.price, item.description)}>
+                                    disabled={item.amount<=0?true:false}
+                                    onClick={() => this.addItembag(item._id, item.price, item.description)}>
                                     <img
-                                        src={"http://'"+global.ip+"':4000/images/" + item.image}
-                                        className="rounded float-left"
+                                        src={"http://"+global.ip+":4000/images/" + item.image}
+                                        className="rounded float-left m-2"
                                         height="100"
                                         width="100"
                                         alt="Error"
                                         onError={(e) => { e.target.src = "http://"+global.ip+":4000/images/item.png" }} />
-                                    <h6>{item.description}</h6> <h4>{item.price.toFixed(2)} Bs</h4>
-                                </div>
+                                    <h6>{item.description.toUpperCase()}</h6> <h4>{item.price.toFixed(2)} Bs</h4>
+                                    <h4>C: {item.amount}</h4>
+                                    
+                                </button>:""
                             )
                             )
                         }
@@ -107,7 +113,7 @@ export default class Buy extends Component {
                     <ul className="list-group">
                         {
                             this.state.itembag.map(itemb => (
-                                <li className="list-group-item list-group-item-action list-group-item-info " key={itemb._id} onDoubleClick={() => this.deleteItembag(itemb.article)}>
+                                <li className="list-group-item list-group-item-action list-group-item-info" key={itemb._id} onClick={() => this.deleteItembag(itemb.article)}>
                                     <h5>{itemb.description} </h5>
                                     <h5><strong>Precio:</strong>  {itemb.price.toFixed(2)} Bs <strong>Cantidad:</strong> {itemb.amount}</h5>
                                     <h4> <strong>Precio Total: </strong> {(itemb.amount * itemb.price).toFixed(2)}</h4>
@@ -121,7 +127,7 @@ export default class Buy extends Component {
                         <button className="btn bg-light" onClick={this.buyItems}>Solicitar Petición</button>
                     </div>
                 </div>
-            </div>
+            </div>:""
         )
     }
 }

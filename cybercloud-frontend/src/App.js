@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import Navigation from './components/Navigation';
 
-import Terminals from './components/terminalsbeta/Terminals'
+import Terminals from './components/terminals/Terminals'
 
 import Items from './components/items/Items'
 
@@ -37,6 +37,18 @@ import ItemTerminal from './components/items/ItemTerminal'
 import UserHistory from './components/history/UserHistory'
 
 import Registry from './components/registry/Registry'
+
+import RegistryOperator from './components/registry/RegistryOperator'
+
+import Operator from './components/operator/Operator'
+
+import UserOperator from './components/operator/UserOperator'
+
+import Group from './components/operatorgroup/Group'
+
+import BoxPlanning from './components/boxplanning/BoxPlanning'
+
+import Stock from './components/stock/Stock'
 
 class App extends React.Component {
   constructor() {
@@ -103,8 +115,7 @@ class App extends React.Component {
       box:user1.data.box,
       petitions: user1.data.petitions,
       petitionsUsers: user1.data.petitionsUser,
-    })
-    //console.log(this.state);
+    });
   }
   handleLogin(data) {
     this.setState({
@@ -141,6 +152,15 @@ class App extends React.Component {
           path="/items"
           render={props => (
             <Items
+            {...props}
+            logged={this.state.loggedInStatus}
+            user={this.state.user}
+            />
+          )}/>
+        <Route
+          path="/stock"
+          render={props => (
+            <Stock
             {...props}
             logged={this.state.loggedInStatus}
             user={this.state.user}
@@ -192,6 +212,24 @@ class App extends React.Component {
             />
           )}/>
           <Route
+          path="/operator"
+          render={props => (
+            <Operator
+            {...props}
+            logged={this.state.loggedInStatus}
+            user={this.state.user}
+            />
+          )}/>
+          <Route
+          path="/useroperator"
+          render={props => (
+            <UserOperator
+            {...props}
+            logged={this.state.loggedInStatus}
+            user={this.state.user}
+            />
+          )}/>
+          <Route
           path="/rates"
           render={props => (
             <Rates
@@ -215,6 +253,7 @@ class App extends React.Component {
             <Image
             {...props}
             logged={this.state.loggedInStatus}
+            user={this.state.user}
             />
           )}/>
         <Route
@@ -277,6 +316,42 @@ class App extends React.Component {
           path={"/registry"}
           render={props => (
           <Registry
+           {...props}
+            petitions={this.state.petitions}
+            logged={this.state.loggedInStatus}
+            user={this.state.user}
+            />
+            )}
+          />
+          <Route
+          exact
+          path={"/registryoperator"}
+          render={props => (
+          <RegistryOperator
+           {...props}
+            petitions={this.state.petitions}
+            logged={this.state.loggedInStatus}
+            user={this.state.user}
+            />
+            )}
+          />
+          <Route
+          exact
+          path={"/group"}
+          render={props => (
+          <Group
+           {...props}
+            petitions={this.state.petitions}
+            logged={this.state.loggedInStatus}
+            user={this.state.user}
+            />
+            )}
+          />
+          <Route
+          exact
+          path={"/boxplanning"}
+          render={props => (
+          <BoxPlanning
            {...props}
             petitions={this.state.petitions}
             logged={this.state.loggedInStatus}

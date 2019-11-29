@@ -2,16 +2,16 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import Alert from '../WarningMessage'
 export default class Configuration extends Component {
-    state={
-        terminals:[],
-        rates:[],
+    state = {
+        terminals: [],
+        rates: [],
         name: "",
         selectedRate: "",
         rateReally: "",
         message: ""
     }
     getConfiguration = async () => {
-        const res = await axios.get('http://'+global.ip+':4000/api/configuration')
+        const res = await axios.get('http://' + global.ip + ':4000/api/configuration')
         this.setState({
             terminals: res.data.terminals,
             rates: res.data.rates,
@@ -20,34 +20,34 @@ export default class Configuration extends Component {
             selectedRate: res.data.setting.rate
         });
     }
-    addTerminal = async()=>{
-        await axios.post('http://'+global.ip+':4000/api/configuration');
+    addTerminal = async () => {
+        await axios.post('http://' + global.ip + ':4000/api/configuration');
         this.getConfiguration();
     }
-    deleteTerminal = async()=>{
-        await axios.delete('http://'+global.ip+':4000/api/configuration');
+    deleteTerminal = async () => {
+        await axios.delete('http://' + global.ip + ':4000/api/configuration');
         this.getConfiguration();
     }
-    componentDidMount(){
+    componentDidMount() {
         this.getConfiguration()
     }
-    updateSetting=async()=>{
-        const resp = await axios.put('http://'+global.ip+':4000/api/configuration',{
+    updateSetting = async () => {
+        const resp = await axios.put('http://' + global.ip + ':4000/api/configuration', {
             name: this.state.name,
             rate: this.state.selectedRate
         })
         this.getConfiguration();
-        if(resp.status===200){
+        if (resp.status === 200) {
             this.setState({
                 message: "Se guardo correctamente."
             })
             this.Alert.active();
         }
     }
-    nameChange=(event)=>{
+    nameChange = (event) => {
         this.setState({
             [event.target.name]: event.target.value
-          });
+        });
     }
     onChangeRate = e => {
         this.setState({
@@ -57,10 +57,10 @@ export default class Configuration extends Component {
     render() {
         return (
             <div className="m-2">
-            <Alert color="success" ref={element => {this.Alert = element}} message={this.state.message}/>
-            <div className="container">
-                <div className="row justify-content-center align-items-center">
-                    <div className="card col-4">
+                <Alert color="success" ref={element => { this.Alert = element }} message={this.state.message} />
+                <div className="container">
+                    <div className="row justify-content-center align-items-center">
+                        <div className="card col-4">
                             <h1 className="text-center">Configuración</h1>
                             <div className="form-group">
                                 <label>Nombre del Ciber</label>
@@ -73,29 +73,38 @@ export default class Configuration extends Component {
                                     onChange={this.nameChange}
                                     required
                                 />
-                                </div>
-                                <div className="form-group">
-                                <label> Elegir tarifa a utilizar</label>
-                            <select value={this.state.selectedRate} className="browser-default custom-select" onChange={this.onChangeRate}>
-                                {
-                                    this.state.rates.map(rate => (
-                                        <option value={rate._id} key={rate._id} >{rate.name}</option>
-                                    ))
-                                }
-                            </select>
                             </div>
-                            <div className="form-group"><button onClick={this.updateSetting}  className="btn btn-secondary">Guardar</button></div>
+                            <div className="form-group">
+                                <label> Elegir tarifa a utilizar</label>
+                                <select value={this.state.selectedRate} className="browser-default custom-select" onChange={this.onChangeRate}>
+                                    {
+                                        this.state.rates.map(rate => (
+                                            <option value={rate._id} key={rate._id} >{rate.name}</option>
+                                        ))
+                                    }
+                                </select>
+                            </div>
+                            <div className="form-group"><button onClick={this.updateSetting} className="btn btn-secondary">Guardar</button></div>
+                        </div>
                     </div>
-                </div>
-                <div className="row justify-content-center align-items-center">
-                    <div className="card col-4">
+                    <div className="row justify-content-center align-items-center">
+                        <div className="card col-4">
                             <h1 className="text-center">Terminales:</h1>
-                                <label>Numero de terminales</label>
-                                <div className="form-group">
-                            <button onClick={this.deleteTerminal}  className="btn btn-secondary"><i className="fas fa-arrow-alt-circle-down"></i></button><strong>Cantidad: {this.state.terminals.length}</strong><button onClick={this.addTerminal}  className="btn btn-secondary"><i className="fas fa-arrow-alt-circle-up"></i></button></div>
+                            <label>Numero de terminales</label>
+                            <div className="form-group">
+                                <button onClick={this.deleteTerminal} className="btn btn-secondary">
+                                    <i className="fas fa-arrow-alt-circle-down"></i>
+                                </button>
+                                <strong>
+                                    Cantidad: {this.state.terminals.length}
+                                </strong>
+                                <button onClick={this.addTerminal} className="btn btn-secondary">
+                                    <i className="fas fa-arrow-alt-circle-up"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
             </div>
         )
     }

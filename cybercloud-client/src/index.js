@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain, dialog , WIN} = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, dialog , WIN, shell} = require('electron');
 const axios = require('axios')
 const url = require('url');
 const path = require('path');
@@ -57,13 +57,13 @@ function FwindowStop(){
             width: 720, height: 600,
             parent: WindowTimer,
             title: 'CyberCloud-Stop',
-            fullscreen: true,
-            alwaysOnTop:true,
             webPreferences: {
                 nodeIntegration: true
             }
         });
         
+//        fullscreen: true,
+//        alwaysOnTop:true,
         WindowStop.loadURL(url.format({
             pathname: path.join(__dirname, 'views/index.html'),
             protocol: 'file',
@@ -154,9 +154,12 @@ ipcMain.on('client:terminar',async (e) => {
     let response = await dialog.showMessageBox(WIN,options)   
     //console.log(response.response);
     if (response.response==0) {
-        res = await axios.delete('http://'+global.globalip+':4000/api/usedterminal/'+global.globalnumber);
+        const res = await axios.delete('http://'+global.globalip+':4000/api/usedterminal/'+global.globalnumber);
         console.log(res.data)
     }
+});
+ipcMain.on('client:web',async (e) => {
+    shell.openExternal('http://'+global.globalip+':3000');
 });
 ipcMain.on('setting',async (e, data) => {
     try {

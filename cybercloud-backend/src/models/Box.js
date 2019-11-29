@@ -5,15 +5,26 @@ const boxSchema = new Schema({
         required: true,
         unique: true
     },
+    used:{
+        type:Boolean,
+        default: false
+    },
+    group:{
+        type: String
+    },
     startdate:{
         type: Date
     },
     enddate:{
         type: Date
     },
-    Operator:{
-        init: String,
-        closed: String
+    calendar:{
+        init:{
+            type:Date
+        },
+        end:{
+            type:Date
+        }
     }
 });
 module.exports = model('Box', boxSchema);

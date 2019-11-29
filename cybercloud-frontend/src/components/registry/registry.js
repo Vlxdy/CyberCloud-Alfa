@@ -11,9 +11,12 @@ export default class Registry extends Component {
     }
     componentDidMount() {
         this.getBox();
-        setTimeout(() => {
+        this.timer = setTimeout(() => {
             this.getRegistry()
         }, 1000)
+    }
+    componentWillUnmount(){
+        clearTimeout(this.timer);
     }
     getBox = async () => {
         const res = await axios.get('http://'+global.ip+':4000/api/box');
@@ -22,7 +25,7 @@ export default class Registry extends Component {
             boxs: res.data,
             select: res.data.length
         })
-        //console.log(res.data)
+        
     }
     onChangeBox = e => {
         this.setState({
@@ -32,6 +35,7 @@ export default class Registry extends Component {
             this.getRegistry()
         }, 1000)
         // console.log(this.state)
+        //console.log(this.props.user.box)
     }
     getRegistry = async () => {
         const res = await axios.get('http://'+global.ip+':4000/api/registry/' + this.state.select);
@@ -48,6 +52,8 @@ export default class Registry extends Component {
                 <div className="row">
                     <div className="col-4"></div>
                     <div className="col-4">
+                    <div className="form-group">
+
                         <strong>Nro de Caja:</strong>
                         <select value={this.state.select} className="browser-default custom-select" onChange={this.onChangeBox}>
                             {
@@ -56,6 +62,7 @@ export default class Registry extends Component {
                                 ))
                             }
                         </select>
+                        </div>
                     </div>
                     <div className="col-4"></div>
                 </div>

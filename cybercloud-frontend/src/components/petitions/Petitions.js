@@ -23,6 +23,7 @@ export default class Petitions extends Component {
     }
     render() {
         return (
+            this.props.user.enabled?
             <div className="container">
                 <div className="row">
                     {
@@ -47,7 +48,7 @@ export default class Petitions extends Component {
                         ))
                     }
                 </div>
-            </div>
+            </div>:""
         )
     }
 }

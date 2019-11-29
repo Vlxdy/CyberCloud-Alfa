@@ -22,7 +22,8 @@ export default class Signup extends Component {
     }
     handleSubmit(event) {
         const { email, name, password, password_confirmation, phone } = this.state;
-        axios
+        if(password===password_confirmation){
+            axios
             .post(
                 "http://"+global.ip+":4000/api/auth",
                 
@@ -44,8 +45,14 @@ export default class Signup extends Component {
                 }
             })
             .catch(error => {
+                window.alert("El nombre o el correo electrónico ya está en uso.");
                 console.log("registration error", error);
             });
+        
+        }
+        else{
+            window.alert("Repita la contraseña.")
+        }
         event.preventDefault();
     }
     render() {

@@ -21,26 +21,82 @@ userCtrl.getUser = async (req, res) => {
     try {
         const user = await auth.findById(req.params.id);
         const petitions = await Petitions.find({ user: req.params.id });
-        if (user.permissions > 0) {
-            const petitionsUser = await Petitions.find();
-            const box = await Box.findOne({ number: global.setting.numberBox });
-            const itempurchased = await ItemPurchased.find({ numberBox: global.setting.numberBox })
-            const usedterminal = await UsedTerminal.find({ numberBox: global.setting.numberBox })
-            let itemPrice = 0;
-            for (let index = 0; index < itempurchased.length; index++) {
-                if (itempurchased[index].user == "anonymous") { itemPrice = itemPrice + (itempurchased[index].price * itempurchased[index].amount); }
+        if (user.operator) {
+            if (global.setting.boxStatus) {
+                const petitionsUser = await Petitions.find();
+                const box = await Box.findOne({ number: global.setting.numberBox });
+                const itempurchased = await ItemPurchased.find({ numberBox: global.setting.numberBox })
+                const usedterminal = await UsedTerminal.find({ numberBox: global.setting.numberBox })
+                let itemPrice = 0;
+                for (let index = 0; index < itempurchased.length; index++) {
+                    if (itempurchased[index].user == "anonymous") { itemPrice = itemPrice + (itempurchased[index].price * itempurchased[index].amount); }
+                }
+                let terminalPrice = 0;
+                for (let index = 0; index < usedterminal.length; index++) {
+                    if (usedterminal[index].user.id == "0") { terminalPrice = terminalPrice + (usedterminal[index].price); }
+                }
+                const recharge = await Recharge.find({ numberBox: global.setting.numberBox });
+                let userRecharge = 0;
+                for (let index = 0; index < recharge.length; index++) {
+                    userRecharge = userRecharge + recharge[index].amount;
+                }
+                //console.log(user)
+                
+                return res.json({
+                    enabled: global.operators.has(req.params.id),
+                    pstock:user.permissions[0],
+                    pconfig:user.permissions[1],
+                    particle:user.permissions[2],
+                    poperator:user.permissions[3],
+                    pgroupbox:user.permissions[4],
+                    operator: user.operator,
+                    money: user.money,
+                    _id: user._id,
+                    name: user.name,
+                    phone: user.phone,
+                    email: user.email,
+                    createdAt: user.createdAt,
+                    petitions,
+                    box: {
+                        boxStatus: global.setting.boxStatus,
+                        number: box.number,
+                        startdate: box.startdate,
+                        enddate: box.enddate,
+                        itemPrice,
+                        terminalPrice,
+                        userRecharge
+                    },
+                    petitionsUser
+                });
             }
-            let terminalPrice = 0;
-            for (let index = 0; index < usedterminal.length; index++) {
-                if (usedterminal[index].user.id == "0") { terminalPrice = terminalPrice + (usedterminal[index].price); }
+            else {
+                const petitionsUser = await Petitions.find();
+                return res.json({
+                    enabled: global.operators.has(req.params.id),
+                    pstock:user.permissions[0],
+                    pconfig:user.permissions[1],
+                    particle:user.permissions[2],
+                    poperator:user.permissions[3],
+                    pgroupbox:user.permissions[4],
+                    operator: user.operator,
+                    money: user.money,
+                    _id: user._id,
+                    name: user.name,
+                    phone: user.phone,
+                    email: user.email,
+                    createdAt: user.createdAt,
+                    petitions,
+                    box: {
+                        boxStatus: global.setting.boxStatus,
+                        number: global.setting.numberBox,
+                    },
+                    petitionsUser
+                });
             }
-            const recharge = await Recharge.find({ numberBox: global.setting.numberBox });
-            let userRecharge = 0;
-            for (let index = 0; index < recharge.length; index++) {
-                userRecharge = userRecharge + recharge[index].amount;
-            }
+
+        }
+        else {
             return res.json({
-                permissions: user.permissions,
                 money: user.money,
                 _id: user._id,
                 name: user.name,
@@ -49,27 +105,6 @@ userCtrl.getUser = async (req, res) => {
                 createdAt: user.createdAt,
                 petitions,
                 box: {
-                    number: box.number,
-                    startdate: box.startdate,
-                    enddate: box.enddate,
-                    itemPrice,
-                    terminalPrice,
-                    userRecharge
-                },
-                petitionsUser
-            });
-        }
-        else {
-            return res.json({
-                permissions: user.permissions,
-                money: user.money,
-                _id: user._id,
-                name: user.name,
-                phone: user.phone,
-                email: user.email,
-                createdAt: user.createdAt,
-                petitions,
-                box:{
                     number: 0,
                     startdate: "",
                     enddate: "",
@@ -77,7 +112,7 @@ userCtrl.getUser = async (req, res) => {
                     terminalPrice: 0,
                     userRecharge: 0
                 },
-                petitionsUser:[]
+                petitionsUser: []
             });
         }
     } catch (error) {

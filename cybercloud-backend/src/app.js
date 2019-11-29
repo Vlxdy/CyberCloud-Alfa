@@ -39,6 +39,10 @@ app.use('/api/primary', require('./routes/primary'));
 app.use('/api/userhistory', require('./routes/userhistory'));
 app.use('/api/terminalsbeta', require('./routes/terminalsbeta'));
 app.use('/api/registry', require('./routes/registry'));
+app.use('/api/operator', require('./routes/operator'));
+app.use('/api/permission', require('./routes/permission'));
+app.use('/api/operatorgroup', require('./routes/operatorgroup'));
+app.use('/api/stock', require('./routes/stock'));
 
 
 //image upload
